@@ -98,6 +98,9 @@ class MyPromise {
             .then((value) => {
               results[index] = value;
               fulfilledCount++;
+              if (fulfilledCount === promises.length) {
+                resolve(results);
+              }
             })
             .catch((error) => {
               reject(error);
@@ -105,9 +108,9 @@ class MyPromise {
         } else {
           results[index] = promise;
           fulfilledCount++;
-        }
-        if (fulfilledCount === promises.length) {
-          resolve(results);
+          if (fulfilledCount === promises.length) {
+            resolve(results);
+          }
         }
       });
     });
