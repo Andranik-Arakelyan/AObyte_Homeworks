@@ -24,7 +24,12 @@
 class DomElement {
   constructor(attrs, children) {
     this.attrs = attrs;
-    this.children = children;
+
+    this.children = Array.isArray(children)
+      ? children
+      : !children
+      ? []
+      : [children];
   }
   draw(type) {
     const element = document.createElement(type);
@@ -32,23 +37,24 @@ class DomElement {
     if (attrArray.length) {
       attrArray.forEach(([key, value]) => element.setAttribute(key, value));
     }
-    if (this.children) {
-      if (typeof this.children === "string") {
-        element.innerHTML = this.children;
-      } else if (Array.isArray(this.children)) {
-        this.children.forEach((child) => element.appendChild(child.draw()));
-      } else {
-        element.appendChild(this.children.draw());
-      }
-    }
+
+    this.children.forEach((child) => element.appendChild(child.draw()));
+
+    // if (this.children) {
+    //   if (Array.isArray(this.children)) {
+    //     this.children.forEach((child) => element.appendChild(child.draw()));
+    //   } else {
+    //     element.appendChild(this.children.draw());
+    //   }
+    // }
     return element;
   }
 }
 
 class DivElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "div";
   }
   draw() {
     return super.draw(this.type);
@@ -56,9 +62,9 @@ class DivElement extends DomElement {
 }
 
 class InputElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "input";
   }
   draw() {
     return super.draw(this.type);
@@ -66,9 +72,9 @@ class InputElement extends DomElement {
 }
 
 class SpanElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "span";
   }
   draw() {
     return super.draw(this.type);
@@ -76,9 +82,9 @@ class SpanElement extends DomElement {
 }
 
 class FormElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "form";
   }
   draw() {
     return super.draw(this.type);
@@ -86,9 +92,9 @@ class FormElement extends DomElement {
 }
 
 class UlElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "ul";
   }
   draw() {
     return super.draw(this.type);
@@ -96,9 +102,9 @@ class UlElement extends DomElement {
 }
 
 class LiElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "li";
   }
   draw() {
     return super.draw(this.type);
@@ -106,9 +112,9 @@ class LiElement extends DomElement {
 }
 
 class BrElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "br";
   }
   draw() {
     return super.draw(this.type);
@@ -116,48 +122,61 @@ class BrElement extends DomElement {
 }
 
 class LabelElement extends DomElement {
-  constructor(type, ...args) {
+  constructor(...args) {
     super(...args);
-    this.type = type;
+    this.type = "label";
   }
   draw() {
     return super.draw(this.type);
   }
 }
 
+class OtherElement extends DomElement {
+  constructor(nodeText, ...args) {
+    super(...args);
+    this.nodeText = nodeText;
+  }
+  draw() {
+    return document.createTextNode(this.nodeText);
+  }
+}
+
 function el(type, attrs, children) {
+  if (!(children instanceof DomElement) && !Array.isArray(children)) {
+    children = new OtherElement(children);
+  }
   let element;
   switch (type) {
     case "div":
-      element = new DivElement(type, attrs, children);
+      element = new DivElement(attrs, children);
       break;
 
     case "span":
-      element = new SpanElement(type, attrs, children);
+      element = new SpanElement(attrs, children);
       break;
 
     case "form":
-      element = new FormElement(type, attrs, children);
+      element = new FormElement(attrs, children);
       break;
 
     case "input":
-      element = new InputElement(type, attrs, children);
+      element = new InputElement(attrs, children);
       break;
 
     case "ul":
-      element = new UlElement(type, attrs, children);
+      element = new UlElement(attrs, children);
       break;
 
     case "li":
-      element = new LiElement(type, attrs, children);
+      element = new LiElement(attrs, children);
       break;
 
     case "br":
-      element = new BrElement(type, attrs, children);
+      element = new BrElement(attrs, children);
       break;
 
     case "label":
-      element = new LabelElement(type, attrs, children);
+      element = new LabelElement(attrs, children);
       break;
   }
 
@@ -168,51 +187,37 @@ function el(type, attrs, children) {
 
 // 1
 
-/* const tree =
-        el("div", {"class": "some_classname", "id": "some_id"},
-        el("span", {}, 'hello')
-    );
-*/
+// const tree = el(
+//   "div",
+//   { class: "some_classname", id: "some_id" },
+//   el("span", { class: "other" }, "hello")
+// );
 
 // 2
 
-/*
-  const tree = el(
-  "div",
-  {},
-  el("ul", {}, [
-    el("li", {}, "Item 1"),
-    el("li", {}, "Item 2"),
-    el("li", {}, "Item 3"),
-  ])
-);
-*/
+// const tree = el("form", { action: "/some_action" }, [
+//   el("label", { for: "name" }, "Item 1"),
+//   el("li", {}, "Item 2"),
+//   el("li", {}, "Item 3"),
+// ]);
 
 // 3
 
 const tree = el("form", { action: "/some_action" }, [
   el("label", { for: "name" }, "First name:"),
-  el("br", {}, null),
-  el(
-    "input",
-    { type: "text", id: "name", name: "name", value: "My name" },
-    null
-  ),
-  el("br", {}, null),
+  el("br", {}),
+  el("input", { type: "text", id: "name", name: "name", value: "My name" }),
+  el("br", {}),
   el("label", { for: "last_name" }, "Last name:"),
-  el("br", {}, null),
-  el(
-    "input",
-    {
-      type: "text",
-      id: "last_name",
-      name: "last_name",
-      value: "My second name",
-    },
-    null
-  ),
-  el("br", {}, null),
-  el("input", { type: "submit", value: "Submit" }, null),
+  el("br", {}),
+  el("input", {
+    type: "text",
+    id: "last_name",
+    name: "last_name",
+    value: "My second name",
+  }),
+  el("br", {}),
+  el("input", { type: "submit", value: "Submit" }),
 ]);
 
 document.getElementById("root").appendChild(tree.draw());

@@ -32,7 +32,7 @@ function ajax(url, config) {
   });
 }
 
-//  CUSTOM PROMISE
+// CUSTOM PROMISE
 
 function CustomPromise(callback) {
   this.value = null;
