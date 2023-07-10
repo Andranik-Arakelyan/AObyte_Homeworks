@@ -1,27 +1,33 @@
+const EMPTY = "";
+const SPACE = " ";
+const ITEM = " *";
+const NEW_LINE = "\n";
+const ERROR_COLOR = "rgb(255, 80, 80)";
+
 function createTriangle(num) {
-  let inner = "";
+  let inner = EMPTY;
   for (let i = 0; i < num; i++) {
     for (let j = 0; j < num - i - 1; j++) {
-      inner += " ";
+      inner += SPACE;
     }
     for (let k = num - i - 1; k < num; k++) {
-      inner += " *";
+      inner += ITEM;
     }
-    inner += "\n";
+    inner += NEW_LINE;
   }
   return inner;
 }
 
 function rotateTriangle(num) {
-  let inner = "";
+  let inner = EMPTY;
   for (let i = num; i > 0; i--) {
     for (let j = i; j < num; j++) {
-      inner += " ";
+      inner += SPACE;
     }
     for (let k = num - i; k < num; k++) {
-      inner += " *";
+      inner += ITEM;
     }
-    inner += "\n";
+    inner += NEW_LINE;
   }
   return inner;
 }
@@ -38,9 +44,16 @@ buttonNode.addEventListener("click", () => {
 inputNode.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
-    preNode.innerText = createTriangle(inputNode.value);
-    reversedPreNode.innerText = "";
+    if (inputNode.value < 1) {
+      inputNode.value = "";
+      inputNode.placeholder = "Please input positive number";
+      inputNode.style.backgroundColor = ERROR_COLOR;
+    } else {
+      preNode.innerText = createTriangle(inputNode.value);
+      reversedPreNode.innerText = "";
+      inputNode.style.backgroundColor = "transparent";
 
-    buttonNode.style.display = "block";
+      buttonNode.style.display = "block";
+    }
   }
 });
