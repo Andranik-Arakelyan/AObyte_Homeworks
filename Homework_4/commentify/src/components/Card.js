@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import classes from "./Card.module.css";
 import rating from "../assets/rate.png";
+import { ASCENDING, DESCENDING } from "../constants/text";
 
 class Card extends Component {
   state = {
-    sortDirection: "descending",
+    sortDirection: DESCENDING,
   };
   render() {
     return (
@@ -20,25 +21,24 @@ class Card extends Component {
             onClick={() => {
               this.setState({
                 sortDirection:
-                  this.state.sortDirection === "ascending"
-                    ? "descending"
-                    : "ascending",
+                  this.state.sortDirection === ASCENDING
+                    ? DESCENDING
+                    : ASCENDING,
               });
               this.props.sortDir(
                 `${
-                  this.state.sortDirection === "ascending"
-                    ? "descending"
-                    : "ascending"
+                  this.state.sortDirection === ASCENDING
+                    ? DESCENDING
+                    : ASCENDING
                 }`
               );
             }}
           >
-            {this.state.sortDirection === "descending"
+            {this.state.sortDirection === DESCENDING
               ? "Sort by ascending"
               : "Sort by descending"}
           </button>
           <button onClick={this.props.clearDesk}>Clear All</button>
-          {/* <button className={classes.actionButton}>Back</button>     */}
         </div>
         <ul className={classes.posts}>
           {this.props.posts.map((post, id) => {
