@@ -1,0 +1,64 @@
+import React, { Component } from "react";
+import classes from "./Card.module.css";
+import rating from "../assets/rate.png";
+
+class Card extends Component {
+  state = {
+    sortDirection: "descending",
+  };
+  render() {
+    return (
+      <div className={classes.desk}>
+        <div className={classes.actions}>
+          <button
+            className={classes.actionButton}
+            onClick={() => this.props.addPost(this.state.sortDirection)}
+          >
+            +
+          </button>
+          <button
+            onClick={() => {
+              this.setState({
+                sortDirection:
+                  this.state.sortDirection === "ascending"
+                    ? "descending"
+                    : "ascending",
+              });
+              this.props.sortDir(
+                `${
+                  this.state.sortDirection === "ascending"
+                    ? "descending"
+                    : "ascending"
+                }`
+              );
+            }}
+          >
+            {this.state.sortDirection === "descending"
+              ? "Sort by ascending"
+              : "Sort by descending"}
+          </button>
+          <button onClick={this.props.clearDesk}>Clear All</button>
+          {/* <button className={classes.actionButton}>Back</button>     */}
+        </div>
+        <ul className={classes.posts}>
+          {this.props.posts.map((post, id) => {
+            return (
+              <li key={id} className={classes.post}>
+                <span>{post.post}</span>
+                <span>
+                  <img src={rating} alt="rating" />
+                  {post.average}
+                  <button onClick={() => this.props.removeHandler(post.id)}>
+                    -
+                  </button>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default Card;
