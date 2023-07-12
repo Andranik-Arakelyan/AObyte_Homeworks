@@ -7,6 +7,22 @@ class Card extends Component {
   state = {
     sortDirection: DESCENDING,
   };
+
+  drawPosts = () => {
+    return this.props.posts.map((post, id) => {
+      return (
+        <li key={id} className={classes.post}>
+          <span>{post.post}</span>
+          <span>
+            <img src={rating} alt="rating" />
+            {post.average}
+            <button onClick={() => this.props.removeHandler(post.id)}>-</button>
+          </span>
+        </li>
+      );
+    });
+  };
+
   render() {
     return (
       <div className={classes.desk}>
@@ -40,22 +56,7 @@ class Card extends Component {
           </button>
           <button onClick={this.props.clearDesk}>Clear All</button>
         </div>
-        <ul className={classes.posts}>
-          {this.props.posts.map((post, id) => {
-            return (
-              <li key={id} className={classes.post}>
-                <span>{post.post}</span>
-                <span>
-                  <img src={rating} alt="rating" />
-                  {post.average}
-                  <button onClick={() => this.props.removeHandler(post.id)}>
-                    -
-                  </button>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
+        <ul className={classes.posts}>{this.drawPosts()}</ul>
       </div>
     );
   }

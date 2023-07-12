@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import classes from "./Main.module.css";
 import Card from "./Card";
 import sort from "../helpers/sort";
+import calculateAverages from "../helpers/average";
 import { DUMMY_LIST } from "../constants/posts";
 import {
   ASCENDING,
@@ -13,7 +14,7 @@ import {
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.initialPosts = sort(DUMMY_LIST);
+    this.initialPosts = sort(calculateAverages(DUMMY_LIST));
     this.state = {
       allPosts: this.initialPosts,
       leftPosts: [],
