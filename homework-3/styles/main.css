@@ -1,0 +1,45 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+input {
+  width: 200px;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+#root div {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+#triangle-container {
+  margin-top: 100px;
+}
+
+.traingles {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
+#rotate {
+  padding: 5px 15px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: gray;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  display: none;
+}
+
+#rotate:hover {
+  background-color: rgb(94, 93, 93);
+}
