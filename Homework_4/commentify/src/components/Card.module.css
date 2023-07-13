@@ -1,0 +1,50 @@
+.desk {
+  border: 2px solid rgb(91, 133, 73);
+  background-color: rgb(206, 211, 183);
+  padding: 15px 10px;
+  width: 45%;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.actions button,
+.post button {
+  cursor: pointer;
+  border: 2px solid rgb(91, 133, 73);
+  border-radius: 4px;
+  background-color: #f5eeee;
+  box-shadow: 0 0 4px #e7d0d5;
+  transition: background-color 0.5s;
+}
+
+.actions button:hover,
+.post button:hover {
+  background-color: rgb(225, 225, 158);
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin-top: 30px;
+  padding: 7px;
+}
+
+.post {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post span {
+  display: flex;
+  gap: 10px;
+}
+
+.post img {
+  width: 20px;
+}
