@@ -1,7 +1,7 @@
 export const DUMMY_LIST = [
   {
     id: 1,
-    post: "Favorite Books",
+    title: "Favorite Books",
     comments: [
       {
         id: "comment1",
@@ -24,7 +24,7 @@ export const DUMMY_LIST = [
   },
   {
     id: 2,
-    post: "Best Travel Destinations",
+    title: "Best Travel Destinations",
     comments: [
       {
         id: "comment4",
@@ -48,7 +48,7 @@ export const DUMMY_LIST = [
   },
   {
     id: 3,
-    post: "Favorite Movies of All Time",
+    title: "Favorite Movies of All Time",
     comments: [
       {
         id: "comment7",
@@ -72,7 +72,7 @@ export const DUMMY_LIST = [
   },
   {
     id: 4,
-    post: "Healthy Recipes",
+    title: "Healthy Recipes",
     comments: [
       {
         id: "comment10",
@@ -96,7 +96,7 @@ export const DUMMY_LIST = [
   },
   {
     id: 5,
-    post: "Favorite TV Shows",
+    title: "Favorite TV Shows",
     comments: [
       {
         id: "comment13",
@@ -115,6 +115,101 @@ export const DUMMY_LIST = [
         comment:
           "Stranger Things is a must-watch for sci-fi enthusiasts. The '80s nostalgia is spot-on!",
         rating: 4.8,
+      },
+    ],
+  },
+  {
+    id: 6,
+    title: "Favorite Music Albums",
+    comments: [
+      {
+        id: "comment16",
+        comment:
+          "Rumours by Fleetwood Mac is a timeless classic. Every song is a gem!",
+        rating: 4.9,
+      },
+      {
+        id: "comment17",
+        comment: "If you enjoy rock music, Led Zeppelin IV is a must-listen.",
+        rating: 4.6,
+      },
+      {
+        id: "comment18",
+        comment:
+          "For hip-hop fans, Kendrick Lamar's To Pimp a Butterfly is a powerful and thought-provoking album.",
+        rating: 4.8,
+      },
+    ],
+  },
+  {
+    id: 7,
+    title: "Favorite Hiking Trails",
+    comments: [
+      {
+        id: "comment19",
+        comment:
+          "The Appalachian Trail is a bucket-list hike for nature enthusiasts.",
+        rating: 4.7,
+      },
+      {
+        id: "comment20",
+        comment:
+          "The Inca Trail in Peru offers a breathtaking journey to Machu Picchu.",
+        rating: 4.4,
+      },
+      {
+        id: "comment21",
+        comment:
+          "For a challenging and rewarding hike, try the Pacific Crest Trail.",
+        rating: 4.9,
+      },
+    ],
+  },
+  {
+    id: 8,
+    title: "Favorite Video Games",
+    comments: [
+      {
+        id: "comment22",
+        comment:
+          "The Legend of Zelda: Breath of the Wild is a masterpiece in gaming.",
+        rating: 5,
+      },
+      {
+        id: "comment23",
+        comment:
+          "Red Dead Redemption 2 offers an immersive and captivating open-world experience.",
+        rating: 4.7,
+      },
+      {
+        id: "comment24",
+        comment:
+          "Portal 2 is a clever and humorous puzzle game that will challenge your mind.",
+        rating: 4.8,
+      },
+    ],
+  },
+  {
+    id: 9,
+    title: "Favorite Art Pieces",
+    comments: [
+      {
+        id: "comment25",
+        comment:
+          "The Starry Night by Vincent van Gogh is a stunning masterpiece that evokes emotions.",
+        rating: 4.9,
+      },
+      {
+        id: "comment26",
+        comment:
+          "If you appreciate abstract art, Composition VII by Wassily Kandinsky is a must-see.",
+        rating: 4.7,
+      },
+      {
+        id: "comment27",
+        comment:
+          "Leonardo da Vinci's Mona Lisa is an iconic and enigmatic painting that captivates viewers.",
+        rating: 4.6,
       },
     ],
   },

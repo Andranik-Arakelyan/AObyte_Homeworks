@@ -12,7 +12,7 @@ class Card extends Component {
     return this.props.posts.map((post, id) => {
       return (
         <li key={id} className={classes.post}>
-          <span>{post.post}</span>
+          <span>{post.title}</span>
           <span>
             <img src={rating} alt="rating" />
             {post.average}
