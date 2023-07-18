@@ -1,91 +1,53 @@
 import React, { Component } from "react";
-import classes from "./Main.module.css";
-import Card from "./Card";
-import sort from "../helpers/sort";
 import calculateAverages from "../helpers/average";
 import { DUMMY_LIST } from "../constants/posts";
-import {
-  ASCENDING,
-  DESCENDING,
-  LEFT_POSTS,
-  RIGHT_POSTS,
-} from "../constants/text";
+import Header from "./Header";
+import Posts from "./Posts";
+import Panel from "./Panel";
 
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.initialPosts = sort(calculateAverages(DUMMY_LIST));
+    this.pool = calculateAverages(DUMMY_LIST);
     this.state = {
-      allPosts: this.initialPosts,
-      leftPosts: [],
-      rightPosts: [],
+      allPosts: [...this.pool],
     };
   }
 
-  addPost = (column, dir) => {
-    if (this.state.allPosts.length) {
-      if (dir === ASCENDING) {
-        this.setState({
-          [column]: sort(
-            [
-              ...this.state[column],
-              this.state.allPosts[this.state.allPosts.length - 1],
-            ],
-            ASCENDING
-          ),
-          allPosts: this.state.allPosts.slice(0, -1),
-        });
-      } else {
-        this.setState({
-          [column]: sort(
-            [...this.state[column], this.state.allPosts[0]],
-            DESCENDING
-          ),
-          allPosts: this.state.allPosts.slice(1),
-        });
+  disableEnablePost = (id, status) => {
+    this.setState((prevState) => {
+      const index = this.state.allPosts.findIndex((post) => id === post.id);
+      const newPosts = [...prevState.allPosts];
+      newPosts[index] = {
+        ...newPosts[index],
+        selected: status,
+      };
+      return { ...prevState, allPosts: newPosts };
+    });
+  };
+
+  filterBySearch = (value) => {
+    const comIncludes = (coms, value) => {
+      for (let i = 0; i < coms.length; i++) {
+        if (coms[i].comment.toLowerCase().includes(value.toLowerCase())) {
+          return true;
+        }
       }
-    }
-  };
-
-  removePost = (column, id) => {
-    this.setState({
-      [column]: this.state[column].filter((item) => item.id !== id),
-      allPosts: sort([
-        ...this.state.allPosts,
-        this.state[column].find((item) => item.id === id),
-      ]),
+      return false;
+    };
+    const filteredPosts = this.pool.filter((post) => {
+      return comIncludes(post.comments, value);
     });
-  };
-
-  changeSortDirection = (column, dir) => {
-    this.setState({ [column]: sort(this.state[column], dir) });
-  };
-
-  clearDesk = (column) => {
-    this.setState({
-      [column]: [],
-      allPosts: sort([...this.state.allPosts, ...this.state[column]]),
-    });
+    this.setState({ allPosts: filteredPosts });
   };
 
   render() {
     return (
-      <div className={classes.container}>
-        <Card
-          addPost={(dir) => this.addPost(LEFT_POSTS, dir)}
-          posts={this.state.leftPosts}
-          removeHandler={(id) => this.removePost(LEFT_POSTS, id)}
-          sortDir={(dir) => this.changeSortDirection(LEFT_POSTS, dir)}
-          clearDesk={() => this.clearDesk(LEFT_POSTS)}
-        />
-        <Card
-          addPost={(dir) => this.addPost(RIGHT_POSTS, dir)}
-          posts={this.state.rightPosts}
-          removeHandler={(id) => this.removePost(RIGHT_POSTS, id)}
-          sortDir={(dir) => this.changeSortDirection(RIGHT_POSTS, dir)}
-          clearDesk={() => this.clearDesk(RIGHT_POSTS)}
-        />
-      </div>
+      <>
+        <Header filter={this.filterBySearch} />
+        <Posts posts={this.state.allPosts} />
+        <Panel posts={this.pool} changeStatus={this.disableEnablePost} />
+      </>
     );
   }
 }
