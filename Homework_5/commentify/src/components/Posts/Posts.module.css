@@ -1,0 +1,38 @@
+.container {
+  padding: 20px;
+}
+
+.posts {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.post {
+  background-color: #ced3b7;
+  box-shadow: 0 0 7px 1px #5b8549;
+  padding: 20px 0;
+  border-radius: 5px;
+}
+
+.disabled {
+  background-color: #f8f8f8d0;
+  color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.comments {
+  padding: 2px 8px;
+}
+
+.pageNumber {
+  cursor: pointer;
+  margin: 12px;
+}
+
+.selectedPage {
+  text-decoration: underline;
+}
