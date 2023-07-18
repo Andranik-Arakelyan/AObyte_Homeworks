@@ -1,0 +1,38 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #d2c6b6;
+  padding: 20px;
+}
+
+.logo {
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.searchBar {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.searchBar input {
+  width: 200px;
+  border: 2px solid #588951;
+  border-radius: 10px;
+  padding: 4px 10px;
+  font-size: 16px;
+  outline: none;
+  background-color: #ced3b7;
+}
+
+.searchBar img {
+  cursor: pointer;
+}
+
+.searchBar img:hover {
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 3px #98be93;
+}

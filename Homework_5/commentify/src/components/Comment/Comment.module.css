@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 2px 5px;
+}
+
+.rate {
+  display: flex;
+  flex-direction: column;
+}
