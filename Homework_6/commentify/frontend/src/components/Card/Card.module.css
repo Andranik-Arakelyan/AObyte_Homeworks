@@ -1,0 +1,55 @@
+.desk {
+  box-shadow: 0 0 9px 0px #7039df;
+  border-radius: 25px;
+  padding: 15px 10px;
+  width: 45%;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.actions button,
+.post button {
+  cursor: pointer;
+  /* border: 2px solid rgb(91, 133, 73); */
+  border-radius: 25px;
+  background-color: 5400fc;
+  box-shadow: 0 0 4px #e7d0d5;
+  transition: background-color 0.5s;
+}
+
+/* .actions button:hover,
+.post button:hover {
+  background-color: rgb(225, 225, 158);
+} */
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin-top: 30px;
+  padding: 7px;
+}
+
+.post {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post span {
+  display: flex;
+  gap: 10px;
+}
+
+.post img {
+  width: 35px;
+  width: 32px;
+}
+
+.post span span {
+  font-size: 22px;
+}
