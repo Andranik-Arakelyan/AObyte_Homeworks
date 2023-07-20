@@ -1,15 +1,18 @@
 import React, { Component } from "react";
-import avatar from "../../assets/avatar.png";
 import rate from "../../assets/rate.png";
 import remove from "../../assets/delete.png";
 import classes from "./Comment.module.css";
+import { getRandomAvatar } from "../../helpers/getRandomAvatar";
 
 class Comment extends Component {
+  state = {
+    avatar: getRandomAvatar(),
+  };
   render() {
     return (
       <div className={classes.container}>
         <div className={classes.comment}>
-          <img src={avatar} alt="avatar" />
+          <img src={this.state.avatar} alt="avatar" />
           <p>{this.props.comment}</p>
         </div>
         <div className={classes.actions}>
@@ -17,7 +20,7 @@ class Comment extends Component {
             className={classes.deleteButton}
             src={remove}
             alt="delete"
-            onClick={this.props.delete}
+            onClick={this.props.openDeleteDialog}
           />
           <div className={classes.rate}>
             <img src={rate} alt="rate" />

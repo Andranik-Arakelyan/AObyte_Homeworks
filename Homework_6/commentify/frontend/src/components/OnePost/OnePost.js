@@ -7,6 +7,7 @@ import { ASCENDING, DESCENDING } from "../../constants/text";
 import sort from "../../helpers/sort";
 import AddComment from "../AddComment/AddComment";
 import { deleteComment } from "../../Api/api";
+import DeleteDialog from "./DeleteDialog";
 
 class OnePost extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class OnePost extends Component {
     this.state = {
       sortDir: DESCENDING,
       comments: sort(props.post.comments, DESCENDING, "rating"),
+      deleteDialog: false,
     };
   }
 
@@ -28,7 +30,6 @@ class OnePost extends Component {
   };
 
   deleteCom = async (postId, commentId) => {
-    // const updatedComments = this.state.comments.filter((com) => com.id !== id);
     const updatedComments = await deleteComment(postId, commentId);
     this.setState({ comments: updatedComments.data });
   };
@@ -70,12 +71,22 @@ class OnePost extends Component {
         <ul className={classes.comments}>
           {this.state.comments.map((com) => {
             return (
-              <Comment
-                key={com.id}
-                comment={com.comment}
-                rating={com.rating}
-                delete={() => this.deleteCom(post.id, com.id)}
-              />
+              <>
+                <Comment
+                  key={com.id}
+                  comment={com.comment}
+                  rating={com.rating}
+                  openDeleteDialog={() => this.setState({ deleteDialog: true })}
+                />
+                <DeleteDialog
+                  open={this.state.deleteDialog}
+                  handleClose={() => this.setState({ deleteDialog: false })}
+                  deleteComment={() => {
+                    this.setState({ deleteDialog: false });
+                    this.deleteCom(post.id, com.id);
+                  }}
+                />
+              </>
             );
           })}
         </ul>
