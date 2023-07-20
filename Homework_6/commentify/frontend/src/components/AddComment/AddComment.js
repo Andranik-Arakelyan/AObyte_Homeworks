@@ -24,7 +24,7 @@ class AddComment extends Component {
       addComment(this.props.id, newComment)
         .then((response) => {
           this.setState({ comment: "", ratingValue: 5, sending: false });
-          this.props.refreshComs(response);
+          this.props.refreshComs(response.data);
         })
         .catch((err) => console.log(err.message));
     }
