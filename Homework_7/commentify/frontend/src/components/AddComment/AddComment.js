@@ -17,6 +17,10 @@ class AddComment extends Component {
     sending: false,
   };
 
+  resetState = () => {
+    this.setState({ comment: "", ratingValue: 5, sending: false });
+  };
+
   addCommentHandler = () => {
     if (this.state.comment !== "") {
       this.setState({ sending: true });
@@ -27,7 +31,7 @@ class AddComment extends Component {
 
       addComment(this.props.id, newComment)
         .then((response) => {
-          this.setState({ comment: "", ratingValue: 5, sending: false });
+          this.resetState();
           this.props.refreshComs(response.data);
         })
         .catch((err) => console.log(err.message));

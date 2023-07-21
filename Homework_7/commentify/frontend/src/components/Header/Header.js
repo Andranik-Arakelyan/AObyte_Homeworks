@@ -4,6 +4,10 @@ import logo from "../../assets/Commentify.png";
 
 import classes from "./Header.module.css";
 
+// function Header(props) {
+
+// }
+
 class Header extends Component {
   render() {
     return (

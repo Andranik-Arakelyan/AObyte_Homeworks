@@ -18,8 +18,7 @@ export const addComment = async (postId, commentData) => {
 
 export const deleteComment = async (postId, commentId) => {
   try {
-    const response = api.delete(`/posts/${postId}/comments/${commentId}`);
-    return response;
+    return await api.delete(`/posts/${postId}/comments/${commentId}`);
   } catch (err) {
     throw new Error("Error deleting comment");
   }

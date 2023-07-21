@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { OnePost } from "../../components";
+import { Post } from "../../components";
 import Pagination from "@mui/material/Pagination";
 
 import classes from "./Posts.module.css";
@@ -16,7 +16,7 @@ class Posts extends Component {
 
   drawPosts = (posts) => {
     return posts.map((post) => {
-      return <OnePost key={post.id} post={post} id={post.id} />;
+      return <Post key={post.id} post={post} id={post.id} />;
     });
   };
 

@@ -12,9 +12,9 @@ import { deleteComment } from "../../Api/api";
 import upSort from "../../assets/upsort.png";
 import downSort from "../../assets/downsort.png";
 
-import classes from "./OnePost.module.css";
+import classes from "./Post.module.css";
 
-class OnePost extends Component {
+class Post extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -105,4 +105,4 @@ class OnePost extends Component {
   }
 }
 
-export default OnePost;
+export default Post;

@@ -24,11 +24,9 @@ class Panel extends Component {
   }
 
   componentDidMount() {
-    // if (!prevProps.posts.length) {
     this.setState({
       allPosts: sort(this.props.posts, DESCENDING, "average"),
     });
-    // }
   }
 
   addPost = (column, dir) => {

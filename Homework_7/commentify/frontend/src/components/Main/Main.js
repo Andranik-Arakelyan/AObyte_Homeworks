@@ -1,46 +1,38 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Header, Posts, Panel } from "../../components";
 
 import { fetchPosts } from "../../Api/api";
 import { calculateAverages } from "../../helpers";
 
-class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      pool: [],
-      allPosts: [],
-      searchedNotFound: false,
-    };
-  }
+function Main(props) {
+  const [loading, setLoading] = useState(false);
+  const [pool, setPool] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  const [searchedNotFound, setSearchedNotFound] = useState(false);
 
-  componentDidMount() {
+  useEffect(() => {
     fetchPosts()
-      .then((response) =>
-        this.setState({
-          loading: false,
-          allPosts: calculateAverages(response.data),
-          pool: calculateAverages(response.data),
-        })
-      )
+      .then((response) => {
+        setLoading(false);
+        setAllPosts(calculateAverages(response.data));
+        setPool(calculateAverages(response.data));
+      })
       .catch((error) => console.error("Error fetching posts:", error));
-  }
+  }, []);
 
-  disableEnablePost = (id, status) => {
-    this.setState((prevState) => {
-      const index = this.state.allPosts.findIndex((post) => id === post.id);
-      const newPosts = [...prevState.allPosts];
-      newPosts[index] = {
-        ...newPosts[index],
-        selected: status,
-      };
-      return { ...prevState, allPosts: newPosts };
-    });
+  const disableEnablePost = (id, status) => {
+    const index = allPosts.findIndex((post) => id === post.id);
+    const newPosts = [...allPosts];
+    newPosts[index] = {
+      ...newPosts[index],
+      selected: status,
+    };
+
+    setAllPosts(newPosts);
   };
 
-  filterBySearch = (value) => {
+  const filterBySearch = (value) => {
     const comIncludes = (coms, value) => {
       for (let i = 0; i < coms.length; i++) {
         return coms[i].comment.toLowerCase().includes(value.toLowerCase());
@@ -48,37 +40,29 @@ class Main extends Component {
       return false;
     };
 
-    const filteredPosts = this.state.pool.filter((post) => {
+    const filteredPosts = pool.filter((post) => {
       return comIncludes(post.comments, value);
     });
 
     if (!filteredPosts.length) {
-      this.setState({ searchedNotFound: true });
+      setSearchedNotFound(true);
     } else {
-      this.setState({ allPosts: filteredPosts, searchedNotFound: false });
+      setAllPosts(filteredPosts);
+      setSearchedNotFound(false);
     }
   };
 
-  render() {
-    return (
-      <>
-        <Header filter={this.filterBySearch} posts={this.state.pool} />
-        {!this.state.loading && (
-          <>
-            {this.state.searchedNotFound ? (
-              <p>Nothing found</p>
-            ) : (
-              <Posts posts={this.state.allPosts} />
-            )}
-            <Panel
-              posts={this.state.pool}
-              changeStatus={this.disableEnablePost}
-            />
-          </>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <Header filter={filterBySearch} posts={pool} />
+      {!loading && (
+        <>
+          {searchedNotFound ? <p>Nothing found</p> : <Posts posts={allPosts} />}
+          <Panel posts={pool} changeStatus={disableEnablePost} />
+        </>
+      )}
+    </>
+  );
 }
 
 export default Main;
