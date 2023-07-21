@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
@@ -10,61 +10,63 @@ import send from "../../assets/send.png";
 
 import classes from "./AddComment.module.css";
 
-class AddComment extends Component {
-  state = {
-    comment: "",
-    ratingValue: 5,
-    sending: false,
+function AddComment(props) {
+  const [comment, setComment] = useState("");
+  const [ratingValue, setRatingValue] = useState(5);
+  const [sending, setSending] = useState(false);
+
+  const { id, refreshComs } = props;
+
+  const resetState = () => {
+    setComment("");
+    setRatingValue(5);
+    setSending(false);
   };
 
-  resetState = () => {
-    this.setState({ comment: "", ratingValue: 5, sending: false });
-  };
+  const addCommentHandler = () => {
+    if (comment !== "") {
+      setSending(true);
 
-  addCommentHandler = () => {
-    if (this.state.comment !== "") {
-      this.setState({ sending: true });
       const newComment = {
-        comment: this.state.comment,
-        rating: this.state.ratingValue,
+        comment: comment,
+        rating: ratingValue,
       };
 
-      addComment(this.props.id, newComment)
+      addComment(id, newComment)
         .then((response) => {
-          this.resetState();
-          this.props.refreshComs(response.data);
+          resetState();
+          refreshComs(response.data);
         })
         .catch((err) => console.log(err.message));
     }
   };
 
-  render() {
-    return (
-      <div className={classes.container}>
-        <textarea
-          value={this.state.comment}
-          placeholder="What do you think about this?"
-          onChange={(e) => this.setState({ comment: e.target.value })}
+  return (
+    <div className={classes.container}>
+      <textarea
+        value={comment}
+        placeholder="What do you think about this?"
+        onChange={(e) => setComment(e.target.value)}
+      />
+      <div>
+        <Typography component="legend">Rate this post</Typography>
+        <Rating
+          name="simple-controlled"
+          disabled={sending}
+          value={ratingValue}
+          precision={0.2}
+          onChange={(event, newValue) => {
+            setRatingValue(newValue);
+          }}
         />
-        <div>
-          <Typography component="legend">Rate this post</Typography>
-          <Rating
-            name="simple-controlled"
-            disabled={this.state.sending}
-            value={this.state.ratingValue}
-            onChange={(event, newValue) => {
-              this.setState({ ratingValue: newValue });
-            }}
-          />
-        </div>
-        {this.state.sending ? (
-          <CircularProgress />
-        ) : (
-          <img src={send} alt="send" onClick={this.addCommentHandler} />
-        )}
       </div>
-    );
-  }
+      {sending ? (
+        <CircularProgress />
+      ) : (
+        <img src={send} alt="send" onClick={addCommentHandler} />
+      )}
+    </div>
+  );
 }
 
 export default AddComment;

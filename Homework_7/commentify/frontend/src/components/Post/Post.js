@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import { Comment } from "../../components";
 import { AddComment } from "../../components";
@@ -14,95 +14,75 @@ import downSort from "../../assets/downsort.png";
 
 import classes from "./Post.module.css";
 
-class Post extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sortDir: DESCENDING,
-      comments: sort(props.post.comments, DESCENDING, "rating"),
-      deleteDialog: false,
-    };
-  }
+function Post(props) {
+  const { post, id } = props;
 
-  refreshComments = (updatedComment) => {
-    this.setState({
-      comments: sort(
-        [...this.state.comments, updatedComment],
-        this.state.sortDir,
-        "rating"
-      ),
+  const [sortDir, setSortDir] = useState(DESCENDING);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [comments, setComments] = useState(
+    sort(props.post.comments, DESCENDING, "rating")
+  );
+
+  const drawComments = () => {
+    return comments.map((com) => {
+      return (
+        <div key={com.id}>
+          <Comment
+            comment={com.comment}
+            rating={com.rating}
+            openDeleteDialog={() => setDeleteDialog(true)}
+          />
+          <DeleteDialog
+            open={deleteDialog}
+            handleClose={() => setDeleteDialog(false)}
+            deleteComment={() => {
+              setDeleteDialog(false);
+              deleteCom(id, com.id);
+            }}
+          />
+        </div>
+      );
     });
   };
 
-  deleteCom = async (postId, commentId) => {
-    const updatedComments = await deleteComment(postId, commentId);
-    this.setState({ comments: updatedComments.data });
+  const refreshComments = (updatedComment) => {
+    setComments(sort([...comments, updatedComment], "rating"));
   };
 
-  drawSortDirection = () => {
-    return this.state.sortDir === DESCENDING ? (
+  const deleteCom = async (postId, commentId) => {
+    const updatedComments = await deleteComment(postId, commentId);
+    setComments(updatedComments.data);
+  };
+
+  const changeSortDirection = () => {
+    setSortDir(sortDir === DESCENDING ? ASCENDING : DESCENDING);
+    setComments(
+      sort(comments, sortDir === DESCENDING ? ASCENDING : DESCENDING, "rating")
+    );
+  };
+
+  const drawSortDirection = () => {
+    return sortDir === DESCENDING ? (
       <div className={classes.sort}>
         <span>Highest rated</span>
-        <img src={upSort} alt="sortDir" onClick={this.changeSortDirection} />
+        <img src={upSort} alt="sortDir" onClick={changeSortDirection} />
       </div>
     ) : (
       <div className={classes.sort}>
         <span>Lowest rated</span>
-        <img src={downSort} alt="sortDir" onClick={this.changeSortDirection} />
+        <img src={downSort} alt="sortDir" onClick={changeSortDirection} />
       </div>
     );
   };
 
-  changeSortDirection = () => {
-    this.setState({
-      sortDir: this.state.sortDir === DESCENDING ? ASCENDING : DESCENDING,
-      comments: sort(
-        this.state.comments,
-        this.state.sortDir === DESCENDING ? ASCENDING : DESCENDING,
-        "rating"
-      ),
-    });
-  };
-
-  render() {
-    const { post } = this.props;
-    return (
-      <li
-        key={post.id}
-        className={`${classes.post} ${post.selected ? classes.disabled : ""}`}
-      >
-        <h3>{post.title}</h3>
-        {this.drawSortDirection()}
-        <ul className={classes.comments}>
-          {this.state.comments.map((com) => {
-            return (
-              <>
-                <Comment
-                  key={com.id}
-                  comment={com.comment}
-                  rating={com.rating}
-                  openDeleteDialog={() => this.setState({ deleteDialog: true })}
-                />
-                <DeleteDialog
-                  open={this.state.deleteDialog}
-                  handleClose={() => this.setState({ deleteDialog: false })}
-                  deleteComment={() => {
-                    this.setState({ deleteDialog: false });
-                    this.deleteCom(post.id, com.id);
-                  }}
-                />
-              </>
-            );
-          })}
-        </ul>
-        <AddComment
-          key={post.id}
-          id={post.id}
-          refreshComs={this.refreshComments}
-        />
-      </li>
-    );
-  }
+  return (
+    <li className={`${classes.post} ${post.selected ? classes.disabled : ""}`}>
+      <h3>{post.title}</h3>
+      {drawSortDirection()}
+      <ul className={classes.comments}>{drawComments()}</ul>
+      <AddComment id={id} refreshComs={refreshComments} />
+    </li>
+  );
 }
 
 export default Post;

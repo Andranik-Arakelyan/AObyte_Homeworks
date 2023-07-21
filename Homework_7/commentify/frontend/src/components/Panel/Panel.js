@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Card } from "../../components";
 
@@ -13,105 +13,103 @@ import {
 
 import classes from "./Panel.module.css";
 
-class Panel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      allPosts: [],
-      leftPosts: [],
-      rightPosts: [],
-    };
-  }
+function Panel(props) {
+  const [allPosts, setAllPosts] = useState([]);
 
-  componentDidMount() {
-    this.setState({
-      allPosts: sort(this.props.posts, DESCENDING, "average"),
-    });
-  }
+  const [leftandRightPosts, setLeftAndRightPosts] = useState({
+    leftPosts: [],
+    rightPosts: [],
+  });
 
-  addPost = (column, dir) => {
-    if (this.state.allPosts.length) {
+  const { posts, changeStatus } = props;
+
+  useEffect(() => {
+    setAllPosts(sort(posts, DESCENDING, "average"));
+  }, [posts]);
+
+  const addPost = (column, dir) => {
+    if (allPosts.length) {
       let pickedPost;
       if (dir === ASCENDING) {
-        pickedPost = this.state.allPosts[this.state.allPosts.length - 1];
-        this.setState({
-          [column]: sort(
-            [...this.state[column], pickedPost],
-            ASCENDING,
-            "average"
-          ),
-          allPosts: this.state.allPosts.slice(0, -1),
-        });
+        pickedPost = allPosts[allPosts.length - 1];
+        setAllPosts((prevAllPosts) => prevAllPosts.slice(0, -1));
       } else {
-        pickedPost = this.state.allPosts[0];
-        this.setState({
-          [column]: sort(
-            [...this.state[column], pickedPost],
-            DESCENDING,
-            "average"
-          ),
-          allPosts: this.state.allPosts.slice(1),
-        });
+        pickedPost = allPosts[0];
+        setAllPosts((prevAllPosts) => prevAllPosts.slice(1));
       }
-      this.props.changeStatus(pickedPost.id, true);
+
+      setLeftAndRightPosts({
+        ...leftandRightPosts,
+        [column]: sort(
+          [...leftandRightPosts[column], pickedPost],
+          dir,
+          "average"
+        ),
+      });
+      changeStatus(pickedPost.id, true);
     }
   };
 
-  removePost = (column, id) => {
-    this.setState({
-      [column]: this.state[column].filter((item) => item.id !== id),
-      allPosts: sort(
-        [
-          ...this.state.allPosts,
-          this.state[column].find((item) => item.id === id),
-        ],
+  const removePost = (column, id) => {
+    setLeftAndRightPosts({
+      ...leftandRightPosts,
+      [column]: leftandRightPosts[column].filter((item) => item.id !== id),
+    });
+
+    setAllPosts(
+      sort(
+        [...allPosts, leftandRightPosts[column].find((item) => item.id === id)],
         DESCENDING,
         "average"
-      ),
+      )
+    );
+
+    changeStatus(id, false);
+  };
+
+  const changeSortDirection = (column, dir) => {
+    setLeftAndRightPosts({
+      ...leftandRightPosts,
+      [column]: sort(leftandRightPosts[column], dir, "average"),
     });
-    this.props.changeStatus(id, false);
   };
 
-  changeSortDirection = (column, dir) => {
-    this.setState({ [column]: sort(this.state[column], dir, "average") });
-  };
+  const clearDesk = (column) => {
+    setLeftAndRightPosts({ ...leftandRightPosts, [column]: [] });
 
-  clearDesk = (column) => {
-    this.setState({
-      [column]: [],
-      allPosts: sort(
-        [...this.state.allPosts, ...this.state[column]],
+    setAllPosts((prevAllPosts) => {
+      return sort(
+        [...prevAllPosts, ...leftandRightPosts[column]],
         DESCENDING,
         "average"
-      ),
+      );
     });
-    this.state[column].forEach((post) =>
-      this.props.changeStatus(post.id, false)
-    );
+
+    leftandRightPosts[column].forEach((post) => {
+      changeStatus(post.id, false);
+    });
   };
 
-  render() {
-    return (
-      <div className={classes.container}>
-        <Card
-          addPost={(dir) => this.addPost(LEFT_POSTS, dir)}
-          posts={this.state.leftPosts}
-          removeHandler={(id) => this.removePost(LEFT_POSTS, id)}
-          sortDir={(dir) => this.changeSortDirection(LEFT_POSTS, dir)}
-          clearDesk={() => this.clearDesk(LEFT_POSTS)}
-          allPosts={this.state.allPosts}
-        />
-        <Card
-          addPost={(dir) => this.addPost(RIGHT_POSTS, dir)}
-          posts={this.state.rightPosts}
-          removeHandler={(id) => this.removePost(RIGHT_POSTS, id)}
-          sortDir={(dir) => this.changeSortDirection(RIGHT_POSTS, dir)}
-          clearDesk={() => this.clearDesk(RIGHT_POSTS)}
-          allPosts={this.state.allPosts}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className={classes.container}>
+      <Card
+        addPost={(dir) => addPost(LEFT_POSTS, dir)}
+        posts={leftandRightPosts.leftPosts}
+        removeHandler={(id) => removePost(LEFT_POSTS, id)}
+        sortDir={(dir) => changeSortDirection(LEFT_POSTS, dir)}
+        clearDesk={() => clearDesk(LEFT_POSTS)}
+        allPosts={allPosts}
+      />
+      <Card
+        addPost={(dir) => addPost(RIGHT_POSTS, dir)}
+        posts={leftandRightPosts.rightPosts}
+        removeHandler={(id) => removePost(RIGHT_POSTS, id)}
+        sortDir={(dir) => changeSortDirection(RIGHT_POSTS, dir)}
+        clearDesk={() => clearDesk(RIGHT_POSTS)}
+        allPosts={allPosts}
+      />
+    </div>
+  );
 }
 
 export default Panel;

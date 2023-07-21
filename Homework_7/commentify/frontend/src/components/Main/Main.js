@@ -22,14 +22,18 @@ function Main(props) {
   }, []);
 
   const disableEnablePost = (id, status) => {
-    const index = allPosts.findIndex((post) => id === post.id);
-    const newPosts = [...allPosts];
-    newPosts[index] = {
-      ...newPosts[index],
-      selected: status,
-    };
+    setAllPosts((prevAllPosts) => {
+      const index = allPosts.findIndex((post) => {
+        return id === post.id;
+      });
+      const newPosts = [...prevAllPosts];
+      newPosts[index] = {
+        ...newPosts[index],
+        selected: status,
+      };
 
-    setAllPosts(newPosts);
+      return newPosts;
+    });
   };
 
   const filterBySearch = (value) => {
