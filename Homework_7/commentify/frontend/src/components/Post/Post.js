@@ -14,13 +14,11 @@ import downSort from "../../assets/downsort.png";
 
 import classes from "./Post.module.css";
 
-function Post(props) {
-  const { post, id } = props;
-
+function Post({ post, id }) {
   const [sortDir, setSortDir] = useState(DESCENDING);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [comments, setComments] = useState(
-    sort(props.post.comments, DESCENDING, "rating")
+    sort(post.comments, DESCENDING, "rating")
   );
 
   const drawComments = () => {

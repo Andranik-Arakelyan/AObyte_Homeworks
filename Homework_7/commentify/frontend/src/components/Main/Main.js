@@ -1,70 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Header, Posts, Panel } from "../../components";
 
-import { fetchPosts } from "../../Api/api";
-import { calculateAverages } from "../../helpers";
-
 function Main(props) {
-  const [loading, setLoading] = useState(false);
-  const [pool, setPool] = useState([]);
-  const [allPosts, setAllPosts] = useState([]);
-  const [searchedNotFound, setSearchedNotFound] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [disablingPost, setDisablingPost] = useState([]);
 
-  useEffect(() => {
-    fetchPosts()
-      .then((response) => {
-        setLoading(false);
-        setAllPosts(calculateAverages(response.data));
-        setPool(calculateAverages(response.data));
-      })
-      .catch((error) => console.error("Error fetching posts:", error));
-  }, []);
-
-  const disableEnablePost = (id, status) => {
-    setAllPosts((prevAllPosts) => {
-      const index = allPosts.findIndex((post) => {
-        return id === post.id;
-      });
-      const newPosts = [...prevAllPosts];
-      newPosts[index] = {
-        ...newPosts[index],
-        selected: status,
-      };
-
-      return newPosts;
-    });
+  const changeSearchValue = (value) => {
+    setSearchValue(value);
   };
 
-  const filterBySearch = (value) => {
-    const comIncludes = (coms, value) => {
-      for (let i = 0; i < coms.length; i++) {
-        return coms[i].comment.toLowerCase().includes(value.toLowerCase());
-      }
-      return false;
-    };
-
-    const filteredPosts = pool.filter((post) => {
-      return comIncludes(post.comments, value);
-    });
-
-    if (!filteredPosts.length) {
-      setSearchedNotFound(true);
-    } else {
-      setAllPosts(filteredPosts);
-      setSearchedNotFound(false);
-    }
+  const changeStatus = (disabling) => {
+    setDisablingPost(disabling);
   };
 
   return (
     <>
-      <Header filter={filterBySearch} posts={pool} />
-      {!loading && (
-        <>
-          {searchedNotFound ? <p>Nothing found</p> : <Posts posts={allPosts} />}
-          <Panel posts={pool} changeStatus={disableEnablePost} />
-        </>
-      )}
+      <Header changeSearchValue={changeSearchValue} searchValue={searchValue} />
+      <Posts searchValue={searchValue} disablingPost={disablingPost} />
+      <Panel changeStatus={changeStatus} />
     </>
   );
 }

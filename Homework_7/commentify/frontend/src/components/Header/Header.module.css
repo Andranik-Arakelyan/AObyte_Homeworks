@@ -37,3 +37,7 @@
   border-radius: 10px;
   box-shadow: 0px 0px 3px 3px #98be93;
 }
+
+.login button {
+  color: #1976d2;
+}

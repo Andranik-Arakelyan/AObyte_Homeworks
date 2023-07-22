@@ -5,9 +5,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import React from "react";
 
-function DeleteDialog(props) {
-  const { open, handleClose, deleteComment } = props;
-
+function DeleteDialog({ open, handleClose, deleteComment }) {
   return (
     <div>
       <Dialog
@@ -17,7 +15,7 @@ function DeleteDialog(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Sure want delete this comment?"}
+          {"Sure you want delete this comment?"}
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose}>No</Button>

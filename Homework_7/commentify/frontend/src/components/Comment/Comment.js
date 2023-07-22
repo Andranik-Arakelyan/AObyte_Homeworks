@@ -6,10 +6,9 @@ import remove from "../../assets/delete.png";
 
 import classes from "./Comment.module.css";
 
-function Comment(props) {
+function Comment({ comment, rating, openDeleteDialog }) {
   const avatar = getRandomAvatar();
 
-  const { comment, rating, openDeleteDialog } = props;
   return (
     <div className={classes.container}>
       <div className={classes.comment}>

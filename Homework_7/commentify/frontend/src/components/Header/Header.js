@@ -3,20 +3,25 @@ import React from "react";
 import logo from "../../assets/Commentify.png";
 
 import classes from "./Header.module.css";
+import { Button } from "@mui/material";
 
-function Header(props) {
+function Header({ changeSearchValue, searchValue }) {
   return (
     <header className={classes.header}>
       <img className={classes.logo} src={logo} alt="logo" />
       <div className={classes.searchBar}>
         <input
           onDragOver={(e) => e.preventDefault()}
-          placeholder="Search by Comments"
+          placeholder="Find a post"
+          value={searchValue}
           type="text"
           onChange={(e) => {
-            props.filter(e.target.value);
+            changeSearchValue(e.target.value);
           }}
         />
+      </div>
+      <div className={classes.login}>
+        <Button variant="outlined">Log In</Button>
       </div>
     </header>
   );

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { Card } from "../../components";
 
-import { sort } from "../../helpers";
+import { fetchPosts } from "../../Api/api";
+import { calculateAverages, sort } from "../../helpers";
 
 import {
   LEFT_POSTS,
@@ -13,19 +14,29 @@ import {
 
 import classes from "./Panel.module.css";
 
-function Panel(props) {
-  const [allPosts, setAllPosts] = useState([]);
+function Panel({ changeStatus }) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  const [allPosts, setAllPosts] = useState([]);
   const [leftandRightPosts, setLeftAndRightPosts] = useState({
     leftPosts: [],
     rightPosts: [],
   });
 
-  const { posts, changeStatus } = props;
-
   useEffect(() => {
-    setAllPosts(sort(posts, DESCENDING, "average"));
-  }, [posts]);
+    fetchPosts()
+      .then((response) => {
+        setAllPosts(
+          sort(calculateAverages(response.data), DESCENDING, "average")
+        );
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setError(error);
+      });
+  }, []);
 
   const addPost = (column, dir) => {
     if (allPosts.length) {
@@ -46,7 +57,8 @@ function Panel(props) {
           "average"
         ),
       });
-      changeStatus(pickedPost.id, true);
+
+      changeStatus([{ id: pickedPost.id, status: true }]);
     }
   };
 
@@ -64,7 +76,7 @@ function Panel(props) {
       )
     );
 
-    changeStatus(id, false);
+    changeStatus([{ id: id, status: false }]);
   };
 
   const changeSortDirection = (column, dir) => {
@@ -85,12 +97,15 @@ function Panel(props) {
       );
     });
 
-    leftandRightPosts[column].forEach((post) => {
-      changeStatus(post.id, false);
+    const disablings = leftandRightPosts[column].map((post) => {
+      return { id: post.id, status: false };
     });
+    changeStatus(disablings);
   };
 
-  return (
+  return !loading && error ? (
+    <p>Failed to fetch posts</p>
+  ) : (
     <div className={classes.container}>
       <Card
         addPost={(dir) => addPost(LEFT_POSTS, dir)}

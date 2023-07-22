@@ -10,17 +10,19 @@ import send from "../../assets/send.png";
 
 import classes from "./AddComment.module.css";
 
-function AddComment(props) {
+function AddComment({ id, refreshComs }) {
   const [comment, setComment] = useState("");
   const [ratingValue, setRatingValue] = useState(5);
   const [sending, setSending] = useState(false);
-
-  const { id, refreshComs } = props;
 
   const resetState = () => {
     setComment("");
     setRatingValue(5);
     setSending(false);
+  };
+
+  const commentChangeHandler = (value) => {
+    setComment(value);
   };
 
   const addCommentHandler = () => {
@@ -46,7 +48,7 @@ function AddComment(props) {
       <textarea
         value={comment}
         placeholder="What do you think about this?"
-        onChange={(e) => setComment(e.target.value)}
+        onChange={(e) => commentChangeHandler(e.target.value)}
       />
       <div>
         <Typography component="legend">Rate this post</Typography>
