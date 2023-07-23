@@ -14,6 +14,7 @@ import upSort from "../../assets/upsort.png";
 import downSort from "../../assets/downsort.png";
 
 import classes from "./Post.module.css";
+import { Link } from "react-router-dom";
 
 function Post({ post, id }) {
   const [sortDir, setSortDir] = useState(DESCENDING);
@@ -76,7 +77,9 @@ function Post({ post, id }) {
 
   return (
     <Card disabled={post.selected ? "disabled" : ""}>
-      <h3>{post.title}</h3>
+      <Link to={`posts/${post.id}`}>
+        <h3>{post.title}</h3>
+      </Link>
       {drawSortDirection()}
       <ul className={classes.comments}>{drawComments()}</ul>
       <AddComment id={id} refreshComs={refreshComments} />

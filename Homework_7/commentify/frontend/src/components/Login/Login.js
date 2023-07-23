@@ -5,12 +5,17 @@ import Card from "../../UI/Card";
 
 import close from "../../assets/close.png";
 import classes from "./Login.module.css";
+import { useNavigate } from "react-router-dom";
+import { SIGN_UP } from "../../constants/path";
 
 const Backdrop = ({ onClose }) => {
   return <div className={classes.backDrop} onClick={onClose} />;
 };
 
 const LoginModal = ({ onCancel }) => {
+  const navigate = useNavigate();
+  const handleSignUpClick = () => navigate(SIGN_UP);
+
   return (
     <Card modal="modal">
       <div className={classes.container}>
@@ -40,7 +45,7 @@ const LoginModal = ({ onCancel }) => {
           <div className={classes.question}>
             <span>Don't have an account yet?</span>
           </div>
-          <button>Sign up</button>
+          <button onClick={handleSignUpClick}>Sign up</button>
         </div>
       </div>
     </Card>

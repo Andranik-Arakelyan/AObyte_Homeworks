@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { Header, Posts, Panel, Login } from "../../components";
+import { Header, Posts, Panel, Login } from "../components";
 
-function Main(props) {
+function Home(props) {
   const [searchValue, setSearchValue] = useState("");
   const [disablingPost, setDisablingPost] = useState([]);
   const [loginModal, setLoginModal] = useState(false);
@@ -23,6 +23,7 @@ function Main(props) {
     <>
       {loginModal && <Login onClose={handleLoginModal} />}
       <Header
+        searchBar={true}
         changeSearchValue={changeSearchValue}
         searchValue={searchValue}
         openLoginModal={handleLoginModal}
@@ -33,4 +34,4 @@ function Main(props) {
   );
 }
 
-export default Main;
+export default Home;

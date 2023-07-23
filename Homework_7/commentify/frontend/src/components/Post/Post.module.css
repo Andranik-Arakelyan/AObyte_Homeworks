@@ -17,3 +17,16 @@
   border-radius: 6px;
   box-shadow: 0px 0px 7px 3px #e7e3d7;
 }
+
+a {
+  text-decoration: none;
+}
+
+a h3 {
+  color: #1976d2;
+  transition: all 0.3s;
+}
+
+a h3:hover {
+  color: #0f4071;
+}

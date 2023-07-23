@@ -25,7 +25,6 @@ function Posts({ searchValue, disablingPost }) {
         setPool(calculateAverages(response.data));
       })
       .catch((error) => {
-        console.log(error);
         setLoading(false);
         setError(error);
       });

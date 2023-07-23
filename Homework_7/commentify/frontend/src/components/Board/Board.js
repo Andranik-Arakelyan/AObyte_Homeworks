@@ -7,16 +7,27 @@ import rating from "../../assets/rate.png";
 
 import classes from "./Board.module.css";
 import Card from "../../UI/Card";
+import { useNavigate } from "react-router-dom";
 
 function Board(props) {
   const [sortDirection, setSortDir] = useState(DESCENDING);
 
+  const navigate = useNavigate();
+
+  const openPostDetails = (id) => {
+    navigate(`posts/${id}`);
+  };
+
   const { addPost, posts, removeHandler, sortDir, clearDesk, allPosts } = props;
 
   const drawPosts = () => {
-    return posts.map((post, id) => {
+    return posts.map((post) => {
       return (
-        <li key={id} className={classes.post}>
+        <li
+          key={post.id}
+          className={classes.post}
+          onClick={() => openPostDetails(post.id)}
+        >
           <span>{post.title}</span>
           <span>
             <img src={rating} alt="rating" />
