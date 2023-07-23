@@ -5,9 +5,10 @@ import { ASCENDING, DESCENDING } from "../../constants";
 
 import rating from "../../assets/rate.png";
 
-import classes from "./Card.module.css";
+import classes from "./Board.module.css";
+import Card from "../../UI/Card";
 
-function Card(props) {
+function Board(props) {
   const [sortDirection, setSortDir] = useState(DESCENDING);
 
   const { addPost, posts, removeHandler, sortDir, clearDesk, allPosts } = props;
@@ -30,7 +31,7 @@ function Card(props) {
   };
 
   return (
-    <div className={classes.desk}>
+    <Card>
       <div className={classes.actions}>
         <Button
           variant="contained"
@@ -56,8 +57,8 @@ function Card(props) {
         </Button>
       </div>
       <ul className={classes.posts}>{drawPosts()}</ul>
-    </div>
+    </Card>
   );
 }
 
-export default Card;
+export default Board;

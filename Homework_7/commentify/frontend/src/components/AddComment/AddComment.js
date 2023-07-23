@@ -4,7 +4,7 @@ import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { addComment } from "../../Api/api";
+import { addComment } from "../../api/api";
 
 import send from "../../assets/send.png";
 

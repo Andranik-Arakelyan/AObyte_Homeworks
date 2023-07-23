@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
-import { Header, Posts, Panel } from "../../components";
+import { Header, Posts, Panel, Login } from "../../components";
 
 function Main(props) {
   const [searchValue, setSearchValue] = useState("");
   const [disablingPost, setDisablingPost] = useState([]);
+  const [loginModal, setLoginModal] = useState(false);
 
   const changeSearchValue = (value) => {
     setSearchValue(value);
@@ -14,9 +15,18 @@ function Main(props) {
     setDisablingPost(disabling);
   };
 
+  const handleLoginModal = () => {
+    setLoginModal((prevLoginModal) => !prevLoginModal);
+  };
+
   return (
     <>
-      <Header changeSearchValue={changeSearchValue} searchValue={searchValue} />
+      {loginModal && <Login onClose={handleLoginModal} />}
+      <Header
+        changeSearchValue={changeSearchValue}
+        searchValue={searchValue}
+        openLoginModal={handleLoginModal}
+      />
       <Posts searchValue={searchValue} disablingPost={disablingPost} />
       <Panel changeStatus={changeStatus} />
     </>

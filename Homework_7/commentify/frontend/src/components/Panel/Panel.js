@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { Card } from "../../components";
+import { Board } from "../../components";
 
-import { fetchPosts } from "../../Api/api";
+import { fetchPosts } from "../../api/api";
 import { calculateAverages, sort } from "../../helpers";
 
 import {
@@ -107,7 +107,7 @@ function Panel({ changeStatus }) {
     <p>Failed to fetch posts</p>
   ) : (
     <div className={classes.container}>
-      <Card
+      <Board
         addPost={(dir) => addPost(LEFT_POSTS, dir)}
         posts={leftandRightPosts.leftPosts}
         removeHandler={(id) => removePost(LEFT_POSTS, id)}
@@ -115,7 +115,7 @@ function Panel({ changeStatus }) {
         clearDesk={() => clearDesk(LEFT_POSTS)}
         allPosts={allPosts}
       />
-      <Card
+      <Board
         addPost={(dir) => addPost(RIGHT_POSTS, dir)}
         posts={leftandRightPosts.rightPosts}
         removeHandler={(id) => removePost(RIGHT_POSTS, id)}

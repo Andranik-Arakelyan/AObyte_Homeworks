@@ -5,7 +5,7 @@ import logo from "../../assets/Commentify.png";
 import classes from "./Header.module.css";
 import { Button } from "@mui/material";
 
-function Header({ changeSearchValue, searchValue }) {
+function Header({ changeSearchValue, searchValue, openLoginModal }) {
   return (
     <header className={classes.header}>
       <img className={classes.logo} src={logo} alt="logo" />
@@ -21,7 +21,9 @@ function Header({ changeSearchValue, searchValue }) {
         />
       </div>
       <div className={classes.login}>
-        <Button variant="outlined">Log In</Button>
+        <Button variant="outlined" onClick={openLoginModal}>
+          Log In
+        </Button>
       </div>
     </header>
   );

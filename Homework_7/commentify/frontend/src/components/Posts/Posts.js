@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import { calculateAverages } from "../../helpers";
 
 import classes from "./Posts.module.css";
-import { fetchPosts } from "../../Api/api";
+import { fetchPosts } from "../../api/api";
 
 function Posts({ searchValue, disablingPost }) {
   const [loading, setLoading] = useState(true);

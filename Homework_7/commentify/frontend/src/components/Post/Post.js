@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { Comment } from "../../components";
 import { AddComment } from "../../components";
 import DeleteDialog from "./DeleteDialog";
+import Card from "../../UI/Card";
 
 import { ASCENDING, DESCENDING } from "../../constants";
 
 import { sort } from "../../helpers";
-import { deleteComment } from "../../Api/api";
+import { deleteComment } from "../../api/api";
 
 import upSort from "../../assets/upsort.png";
 import downSort from "../../assets/downsort.png";
@@ -74,12 +75,12 @@ function Post({ post, id }) {
   };
 
   return (
-    <li className={`${classes.post} ${post.selected ? classes.disabled : ""}`}>
+    <Card disabled={post.selected ? "disabled" : ""}>
       <h3>{post.title}</h3>
       {drawSortDirection()}
       <ul className={classes.comments}>{drawComments()}</ul>
       <AddComment id={id} refreshComs={refreshComments} />
-    </li>
+    </Card>
   );
 }
 
