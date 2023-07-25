@@ -30,6 +30,19 @@ app.get("/api/posts", (req, res) => {
     });
 });
 
+app.get("/api/posts/:postId", (req, res) => {
+  const { postId } = req.params;
+  db.ref("posts")
+    .child(postId)
+    .once("value")
+    .then((snapshot) => {
+      res.json(snapshot.val());
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "Error adding post" });
+    });
+});
+
 app.post("/api/posts", (req, res) => {
   const { id, title } = req.body;
 
@@ -56,12 +69,10 @@ app.delete("/api/posts/:postId/comments/:commentId", (req, res) => {
     .once("value")
     .then((snapshot) => {
       const postData = snapshot.val();
-      // console.log(commentId);
-      // console.log(postData.comments);
+
       postData.comments = postData.comments.filter((com) => {
         return com.id !== commentId;
       });
-      // console.log(postData.comments);
 
       db.ref("posts")
         .child(postId)
