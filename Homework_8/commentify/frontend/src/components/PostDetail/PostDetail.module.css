@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 80%;
+  height: auto;
+  box-shadow: 0 0 2px black;
+  border-radius: 6px;
+}
+
+.heading {
+  background-color: #1976d2;
+  color: white;
+  font-size: 25px;
+  border-radius: 6px 6px 0 0;
+}
+
+.heading h3 {
+  margin: 10px;
+}
+
+.description p {
+  text-align: justify;
+  padding: 6px 14px;
+  font-size: 18px;
+  font-weight: 600;
+}
