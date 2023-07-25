@@ -6,3 +6,4 @@ export { default as Panel } from "./Panel/Panel";
 export { default as Board } from "./Board/Board";
 export { default as Comment } from "./Comment/Comment";
 export { default as AddComment } from "./AddComment/AddComment";
+export { default as PostDetail } from "./PostDetail/PostDetail";
