@@ -1,0 +1,60 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f1efe7;
+  padding: 20px;
+}
+
+.logo {
+  width: 280px;
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.searchBar {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.searchBar input {
+  width: 220px;
+  border: 2px solid #b18cf9;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 16px;
+  outline: none;
+  background-color: #eaece3;
+}
+
+.searchBar img {
+  cursor: pointer;
+}
+
+.searchBar img:hover {
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 3px #98be93;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.login a {
+  text-decoration: none;
+  color: #1976d2;
+  font-size: 18px;
+  transition: all 0.3s;
+}
+
+.login a:hover {
+  color: #0f4071;
+}
+
+.login button {
+  color: #1976d2;
+}
