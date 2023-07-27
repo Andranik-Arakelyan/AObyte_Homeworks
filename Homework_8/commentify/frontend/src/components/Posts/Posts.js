@@ -55,7 +55,7 @@ function Posts({ searchValue, disablingPost }) {
 
   const drawPosts = (posts) => {
     return posts.map((post) => {
-      return <Post key={post.id} post={post} id={post.id} />;
+      return <Post key={post.id} post={post} />;
     });
   };
 

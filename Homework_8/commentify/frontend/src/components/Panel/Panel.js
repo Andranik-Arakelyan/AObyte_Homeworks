@@ -27,9 +27,10 @@ function Panel({ changeStatus }) {
   useEffect(() => {
     fetchPosts()
       .then((response) => {
-        setAllPosts(
-          sort(calculateAverages(response.data), DESCENDING, "average")
+        const withAveragePosts = calculateAverages(response.data).filter(
+          (post) => post.average
         );
+        setAllPosts(sort(withAveragePosts, DESCENDING, "average"));
         setLoading(false);
       })
       .catch((error) => {

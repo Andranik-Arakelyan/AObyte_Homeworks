@@ -3,8 +3,9 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import { HOME_PAGE, PAGE_DETAIL, SIGN_UP } from "./constants/path";
 import HomePage from "./pages/HomePage";
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage, { action as authAction } from "./pages/SignUpPage";
 import PostDetailPage from "./pages/PostDetailPage";
+import AddPost from "./pages/AddPost";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
   {
     path: PAGE_DETAIL,
     element: <PostDetailPage />,
+    action: authAction,
+  },
+  {
+    path: "/addPost",
+    element: <AddPost />,
   },
 ]);
 

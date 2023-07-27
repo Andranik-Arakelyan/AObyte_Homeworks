@@ -1,92 +1,55 @@
 import React, { useState } from "react";
+import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 import classes from "./SignupForm.module.css";
 import logo from "../../assets/Commentify.png";
-import { useNavigate } from "react-router-dom";
 import { HOME_PAGE } from "../../constants/path";
 import InButton from "../../UI/InButton";
 
 function SignupForm(props) {
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [birthDay, setBirthDay] = useState("");
+  const data = useActionData();
+  const navigation = useNavigation();
 
-  const handleNameChange = (value) => {
-    setName(value);
-  };
+  const isSubmitting = navigation.state === "submitting";
 
-  const handleSurnameChange = (value) => {
-    setSurname(value);
-  };
-
-  const handleEmailChange = (value) => {
-    setEmail(value);
-  };
-
-  const handleDateChange = (value) => {
-    setBirthDay(value);
-  };
-
-  const navigateToHome = () => {
-    navigate(HOME_PAGE);
-  };
-
-  const navigate = useNavigate();
   return (
     <div className={classes.container}>
-      <InButton onClick={navigateToHome}>
+      <InButton>
         <img src={logo} alt="logo" style={{ width: "350px" }} />
       </InButton>
 
       <div className={classes.formPart}>
         <h2>It's easy to join us</h2>
-        <form>
+
+        {data && data.errors && (
+          <ul>
+            {Object.values(data.errors).map((err) => (
+              <li key={err}>{err}</li>
+            ))}
+          </ul>
+        )}
+        {data && data.message && <p>{data.message}</p>}
+
+        <Form method="post">
           <div className={classes.singleInput}>
             <label htmlFor="firstName">First Name</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              required
-              value={name}
-              onChange={(e) => handleNameChange(e.target.valeu)}
-            />
+            <input type="text" id="firstName" name="firstName" required />
           </div>
           <div className={classes.singleInput}>
             <label htmlFor="lastName">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              value={surname}
-              onChange={(e) => handleSurnameChange(e.target.value)}
-            />
+            <input type="text" id="lastName" name="lastName" required />
           </div>
           <div className={classes.singleInput}>
             <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              value={email}
-              onChange={(e) => handleEmailChange(e.target.value)}
-            />
+            <input type="email" id="email" name="email" required />
           </div>
-          <div>
-            <label htmlFor="dob">Date of Birth</label>
-            <input
-              type="date"
-              id="dob"
-              name="dob"
-              required
-              value={birthDay}
-              onChange={(e) => handleDateChange(e.target.value)}
-            />
+          <div className={classes.singleInput}>
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" name="password" required />
           </div>
-          <button type="button">Sign up</button>
-        </form>
+          <button disabled={isSubmitting}>
+            {isSubmitting ? "Submiting" : "Sign up"}
+          </button>
+        </Form>
       </div>
     </div>
   );

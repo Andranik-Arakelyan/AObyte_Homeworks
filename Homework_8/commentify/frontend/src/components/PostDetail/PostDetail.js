@@ -1,13 +1,18 @@
 import React from "react";
 import classes from "./PostDetail.module.css";
+import { Comments } from "../../components";
 
-// const drawPhotos = (photos) => {
-//   return photos.map((photo) => {
-//     return <img src={photo.url} key={photo.id} alt="post" />;
-//   });
-// };
-
-function PostDetail({ title, description, photos }) {
+function PostDetail({ title, description, comments, imageUrl, id }) {
+  // console.log(
+  //   "TITLE: ",
+  //   title,
+  //   "DESCRIPTION: ",
+  //   description,
+  //   "COMMENTS: ",
+  //   comments,
+  //   "ID: ",
+  //   id
+  // );
   return (
     <div className={classes.container}>
       <div className={classes.heading}>
@@ -16,7 +21,14 @@ function PostDetail({ title, description, photos }) {
       <div className={classes.description}>
         <p>{description}</p>
       </div>
-      {/* <div className={classes.photos}>{drawPhotos(photos)}</div> */}
+
+      <div className={classes.postImage}>
+        <img src={imageUrl} alt="" />
+      </div>
+
+      <div className={classes.comments}>
+        <Comments comsData={comments} postId={id} />
+      </div>
     </div>
   );
 }

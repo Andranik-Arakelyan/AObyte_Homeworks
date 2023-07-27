@@ -22,7 +22,13 @@ function PostDetailPage(props) {
     <>
       <Header />
       {!loading && (
-        <PostDetail title={postInfo.title} description={postInfo.description} />
+        <PostDetail
+          title={postInfo.title}
+          description={postInfo.description}
+          comments={postInfo.comments}
+          imageUrl={postInfo.imageUrl}
+          id={postInfo.id}
+        />
       )}
     </>
   );

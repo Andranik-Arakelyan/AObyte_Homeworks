@@ -7,3 +7,4 @@ export { default as Board } from "./Board/Board";
 export { default as Comment } from "./Comment/Comment";
 export { default as AddComment } from "./AddComment/AddComment";
 export { default as PostDetail } from "./PostDetail/PostDetail";
+export { default as Comments } from "./Comments/Comments";
