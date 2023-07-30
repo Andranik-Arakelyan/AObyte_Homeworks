@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 2px 5px;
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment p {
+  text-align: left;
+  background-color: #f1efe7;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 0 6px 0px #7039df;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.deleteButton {
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  box-shadow: 0px 0px 7px 4px #e7e3d7;
+}
+
+.rate {
+  display: flex;
+  flex-direction: column;
+}
