@@ -7,23 +7,25 @@ import close from "../../assets/close.png";
 import classes from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 import { SIGN_UP } from "../../constants/path";
+import { useDispatch } from "react-redux";
+import { changeLoginModalStatus } from "../../features/loginModalSlice";
+import InButton from "../../UI/InButton";
+import { Backdrop } from "../../UI/Backdrop";
 
-const Backdrop = ({ onClose }) => {
-  return <div className={classes.backDrop} onClick={onClose} />;
-};
-
-const LoginModal = ({ onCancel }) => {
+const LoginModal = (props) => {
   const navigate = useNavigate();
   const handleSignUpClick = () => navigate(SIGN_UP);
+
+  const dispatch = useDispatch();
 
   return (
     <Card modal="modal">
       <div className={classes.container}>
         <div className={classes.topSide}>
           <p>Log Into Commentify</p>
-          <button onClick={onCancel}>
+          <InButton onClick={() => dispatch(changeLoginModalStatus(false))}>
             <img src={close} alt="close" />
-          </button>
+          </InButton>
         </div>
 
         <div className={classes.formSide}>
@@ -41,6 +43,7 @@ const LoginModal = ({ onCancel }) => {
             <button type="submit">Log In</button>
           </form>
         </div>
+
         <div className={classes.registerSide}>
           <div className={classes.question}>
             <span>Don't have an account yet?</span>
@@ -52,17 +55,19 @@ const LoginModal = ({ onCancel }) => {
   );
 };
 
-function Login({ onClose }) {
+function Login(props) {
+  const dispatch = useDispatch();
   return (
     <>
       {ReactDOM.createPortal(
-        <Backdrop onClose={onClose} />,
+        <Backdrop
+          onClose={() => {
+            dispatch(changeLoginModalStatus(false));
+          }}
+        />,
         document.getElementById("back-drop")
       )}
-      {ReactDOM.createPortal(
-        <LoginModal onCancel={onClose} />,
-        document.getElementById("modal")
-      )}
+      {ReactDOM.createPortal(<LoginModal />, document.getElementById("modal"))}
     </>
   );
 }

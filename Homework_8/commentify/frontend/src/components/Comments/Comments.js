@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { AddComment, Comment } from "../../components";
 import DeleteDialog from "../Post/DeleteDialog";
@@ -11,10 +11,13 @@ import { ASCENDING, DESCENDING } from "../../constants";
 import upSort from "../../assets/upsort.png";
 import downSort from "../../assets/downsort.png";
 import classes from "./Comments.module.css";
+import { PostDataContext } from "../../context";
 
-function Comments({ comsData, postId }) {
+function Comments({ comsData }) {
+  const postData = useContext(PostDataContext);
   const [sortDir, setSortDir] = useState(DESCENDING);
   const [deleteDialog, setDeleteDialog] = useState(false);
+
   const [comments, setComments] = useState(
     sort(comsData, DESCENDING, "rating")
   );
@@ -63,8 +66,8 @@ function Comments({ comsData, postId }) {
         return (
           <li key={com.id}>
             <Comment
-              comment={com.comment}
-              rating={com.rating}
+              commentData={com}
+              postId={postData.id}
               openDeleteDialog={handleDeleteDialogState}
             />
             <DeleteDialog
@@ -72,7 +75,7 @@ function Comments({ comsData, postId }) {
               handleClose={handleDeleteDialogState}
               deleteComment={() => {
                 handleDeleteDialogState();
-                deleteCom(postId, com.id);
+                deleteCom(postData.id, com.id);
               }}
             />
           </li>
@@ -84,7 +87,7 @@ function Comments({ comsData, postId }) {
     <div className={classes.container}>
       {drawSortDirection()}
       <ul>{drawComments(comments)}</ul>
-      <AddComment id={postId} refreshComs={refreshComments} />
+      <AddComment id={postData.id} refreshComs={refreshComments} />
     </div>
   );
 }

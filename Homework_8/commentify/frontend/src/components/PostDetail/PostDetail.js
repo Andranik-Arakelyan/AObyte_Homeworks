@@ -3,16 +3,6 @@ import classes from "./PostDetail.module.css";
 import { Comments } from "../../components";
 
 function PostDetail({ title, description, comments, imageUrl, id }) {
-  // console.log(
-  //   "TITLE: ",
-  //   title,
-  //   "DESCRIPTION: ",
-  //   description,
-  //   "COMMENTS: ",
-  //   comments,
-  //   "ID: ",
-  //   id
-  // );
   return (
     <div className={classes.container}>
       <div className={classes.heading}>

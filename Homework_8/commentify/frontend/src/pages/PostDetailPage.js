@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Header } from "../components";
+import { Header, Login } from "../components";
 import { fetchPostDetails } from "../api/api";
 import { useParams } from "react-router-dom";
 import { PostDetail } from "../components";
+import { useSelector } from "react-redux";
+import { getLoginModalStatus } from "../features/loginModalSlice";
 
 function PostDetailPage(props) {
   const { postId } = useParams();
   const [loading, setLoading] = useState(true);
   const [postInfo, setPostInfo] = useState(null);
+
+  const loginModal = useSelector(getLoginModalStatus);
 
   useEffect(() => {
     fetchPostDetails(postId)
@@ -21,6 +25,7 @@ function PostDetailPage(props) {
   return (
     <>
       <Header />
+      {loginModal && <Login />}
       {!loading && (
         <PostDetail
           title={postInfo.title}

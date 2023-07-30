@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { Form, Link, useActionData, useNavigation } from "react-router-dom";
+import React from "react";
+import {
+  Form,
+  useActionData,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import classes from "./SignupForm.module.css";
 import logo from "../../assets/Commentify.png";
 import { HOME_PAGE } from "../../constants/path";
@@ -8,12 +13,17 @@ import InButton from "../../UI/InButton";
 function SignupForm(props) {
   const data = useActionData();
   const navigation = useNavigation();
+  const navigate = useNavigate();
+
+  const goToHomePage = () => {
+    navigate(HOME_PAGE);
+  };
 
   const isSubmitting = navigation.state === "submitting";
 
   return (
     <div className={classes.container}>
-      <InButton>
+      <InButton onClick={goToHomePage}>
         <img src={logo} alt="logo" style={{ width: "350px" }} />
       </InButton>
 

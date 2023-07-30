@@ -1,13 +1,21 @@
 import React from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+import { getSearchValue, setSearchValue } from "../../features/searchSlice";
+import { changeLoginModalStatus } from "../../features/loginModalSlice";
+
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
+
+import { HOME_PAGE, SIGN_UP } from "../../constants/path";
+
 import logo from "../../assets/Commentify.png";
 
 import classes from "./Header.module.css";
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
-import { HOME_PAGE, SIGN_UP } from "../../constants/path";
 
-function Header({ changeSearchValue, searchValue, openLoginModal, searchBar }) {
+function Header({ searchBar }) {
+  const dispatch = useDispatch();
+  const searchValue = useSelector(getSearchValue);
   return (
     <header className={classes.header}>
       <Link to={HOME_PAGE}>
@@ -21,14 +29,17 @@ function Header({ changeSearchValue, searchValue, openLoginModal, searchBar }) {
             value={searchValue}
             type="text"
             onChange={(e) => {
-              changeSearchValue(e.target.value);
+              dispatch(setSearchValue(e.target.value));
             }}
           />
         )}
       </div>
       <div className={classes.login}>
         <Link to={SIGN_UP}>Sign up</Link>
-        <Button variant="outlined" onClick={openLoginModal}>
+        <Button
+          variant="outlined"
+          onClick={() => dispatch(changeLoginModalStatus(true))}
+        >
           Log In
         </Button>
       </div>

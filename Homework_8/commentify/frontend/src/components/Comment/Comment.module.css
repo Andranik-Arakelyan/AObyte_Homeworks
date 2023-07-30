@@ -1,4 +1,4 @@
-.container {
+.commentContainer {
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -36,4 +36,21 @@
 .rate {
   display: flex;
   flex-direction: column;
+}
+
+.replyContainer {
+  display: flex;
+}
+
+.likeReply {
+  display: flex;
+  gap: 20px;
+  margin: -12px 60px;
+}
+
+.likeReply button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
 }

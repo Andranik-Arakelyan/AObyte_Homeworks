@@ -1,34 +1,23 @@
 import React, { useState } from "react";
 
 import { Header, Posts, Panel, Login } from "../components";
+import { useSelector } from "react-redux";
+import { getLoginModalStatus } from "../features/loginModalSlice";
 
 function Home(props) {
-  const [searchValue, setSearchValue] = useState("");
   const [disablingPost, setDisablingPost] = useState([]);
-  const [loginModal, setLoginModal] = useState(false);
 
-  const changeSearchValue = (value) => {
-    setSearchValue(value);
-  };
+  const modalOpen = useSelector(getLoginModalStatus);
 
   const changeStatus = (disabling) => {
     setDisablingPost(disabling);
   };
 
-  const handleLoginModal = () => {
-    setLoginModal((prevLoginModal) => !prevLoginModal);
-  };
-
   return (
     <>
-      {loginModal && <Login onClose={handleLoginModal} />}
-      <Header
-        searchBar={true}
-        changeSearchValue={changeSearchValue}
-        searchValue={searchValue}
-        openLoginModal={handleLoginModal}
-      />
-      <Posts searchValue={searchValue} disablingPost={disablingPost} />
+      {modalOpen && <Login />}
+      <Header searchBar={true} />
+      <Posts disablingPost={disablingPost} />
       <Panel changeStatus={changeStatus} />
     </>
   );

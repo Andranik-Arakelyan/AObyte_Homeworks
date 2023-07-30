@@ -7,8 +7,10 @@ import { calculateAverages } from "../../helpers";
 
 import classes from "./Posts.module.css";
 import { fetchPosts } from "../../api/api";
+import { useSelector } from "react-redux";
+import { getSearchValue } from "../../features/searchSlice";
 
-function Posts({ searchValue, disablingPost }) {
+function Posts({ disablingPost }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -16,6 +18,8 @@ function Posts({ searchValue, disablingPost }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const postEachPage = 3;
+
+  const searchValue = useSelector(getSearchValue);
 
   useEffect(() => {
     fetchPosts()
@@ -55,7 +59,7 @@ function Posts({ searchValue, disablingPost }) {
 
   const drawPosts = (posts) => {
     return posts.map((post) => {
-      return <Post key={post.id} post={post} />;
+      return !loading && <Post key={post.id} post={post} />;
     });
   };
 

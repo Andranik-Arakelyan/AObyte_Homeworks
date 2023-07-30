@@ -28,9 +28,7 @@ function AddPost(props) {
     };
 
     addPostWithImage(uploadingFiles)
-      .then((res) => {
-        console.log("EXAVVVV");
-      })
+      .then((res) => {})
       .catch((err) => console.log("CHEXAVVV"));
   };
 

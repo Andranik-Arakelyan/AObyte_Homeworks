@@ -42,3 +42,11 @@ export const deleteComment = async (postId, commentId) => {
     throw new Error("Error deleting comment");
   }
 };
+
+export const replyToComment = async (postId, commentId, replyData) => {
+  try {
+    return await api.post(`/posts/${postId}/comments/${commentId}`, replyData);
+  } catch (err) {
+    throw new Error("ERROR ADDING NEW REPLY");
+  }
+};
