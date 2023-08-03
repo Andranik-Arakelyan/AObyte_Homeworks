@@ -1,7 +1,7 @@
 const express = require("express");
 
 const { hash } = require("bcryptjs");
-const { v4: generateId } = require("uuid");
+const { v4: generateId, v4 } = require("uuid");
 
 const admin = require("firebase-admin");
 const cors = require("cors");
@@ -41,11 +41,22 @@ app.use(express.json());
 app.use(cors());
 
 // api which gets all posts from firebase
+
 app.get("/api/posts", (req, res) => {
   db.ref("posts")
     .once("value")
     .then((snapshot) => {
-      res.json(snapshot.val());
+      const postsData = snapshot.val();
+      if (postsData) {
+        for (key in postsData) {
+          postsData[key].comments = postsData[key].comments
+            ? Object.values(postsData[key].comments)
+            : [];
+        }
+        res.json(Object.values(postsData));
+      } else {
+        res.json(null);
+      }
     })
     .catch((error) => {
       res.status(500).json({ error: "Error fetching posts" });
@@ -53,6 +64,7 @@ app.get("/api/posts", (req, res) => {
 });
 
 //api which gets specific post from firebase
+
 app.get("/api/posts/:postId", (req, res) => {
   const { postId } = req.params;
   db.ref("posts")
@@ -67,6 +79,7 @@ app.get("/api/posts/:postId", (req, res) => {
 });
 
 //api which posts new post to firebase
+
 app.post("/api/posts", upload.single("image"), async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -85,21 +98,19 @@ app.post("/api/posts", upload.single("image"), async (req, res) => {
         cacheControl: "public, max-age=31536000",
       },
     });
+
     const publicUrl = `https://storage.googleapis.com/${bucket.name}/${imageRef.name}`;
 
-    const postsSnapshot = await db.ref("posts").once("value");
-    const posts = postsSnapshot.val() || [];
-
-    const index = Object.keys(posts).length;
+    const id = v4();
     const newPost = {
-      id: index.toString(),
+      id: id,
       title,
       description,
       imageUrl: publicUrl,
       comments: "",
     };
 
-    await db.ref("posts").child(index).set(newPost);
+    await db.ref("posts").child(id).set(newPost);
     res.json(newPost);
   } catch (error) {
     console.error("Error uploading image to Firebase Storage:", error);
@@ -110,6 +121,7 @@ app.post("/api/posts", upload.single("image"), async (req, res) => {
 });
 
 // api which creates comment in specific post
+
 app.post("/api/posts/:postId/comments", (req, res) => {
   const { postId } = req.params;
   const { comment, rating } = req.body;
@@ -123,22 +135,26 @@ app.post("/api/posts/:postId/comments", (req, res) => {
         return res.status(404).json({ error: "Post not found" });
       }
 
-      postData.comments = postData.comments || [];
+      postData.comments = postData.comments
+        ? Object.values(postData.comments)
+        : [];
+
+      const id = v4();
 
       const newComment = {
-        id: postData.comments.length,
+        id,
         comment,
         rating,
         replies: "",
       };
 
-      postData.comments.push(newComment);
+      const newComments = [...postData.comments, newComment];
 
-      db.ref("posts")
-        .child(postId)
-        .update({ comments: postData.comments })
+      db.ref(`posts/${postId}/comments/`)
+        .child(id)
+        .set(newComment)
         .then(() => {
-          res.json(newComment);
+          res.json(newComments);
         })
         .catch((error) => {
           res.status(500).json({ error: "Error adding comment" });
@@ -149,7 +165,27 @@ app.post("/api/posts/:postId/comments", (req, res) => {
     });
 });
 
+//api which deletes comment
+
+app.delete("/api/posts/:postId/comments/:commentId", (req, res) => {
+  const { postId, commentId } = req.params;
+
+  db.ref(`posts/${postId}/comments/${commentId}`)
+    .remove()
+    .then(() => {
+      db.ref("posts")
+        .child(postId)
+        .once("value")
+        .then((snapshot) => {
+          const post = snapshot.val();
+          res.json(post.comments ? Object.values(post.comments) : []);
+        });
+    })
+    .catch((err) => console.log("Couldn't delete comment"));
+});
+
 //api which adds reply to specific comment
+
 app.post("/api/posts/:postId/comments/:commentId/", (req, res) => {
   const { postId, commentId } = req.params;
   const { text } = req.body;
@@ -176,33 +212,6 @@ app.post("/api/posts/:postId/comments/:commentId/", (req, res) => {
         .catch((error) => {
           res.status(500).json({ error: "Error adding reply in server.js" });
         });
-    });
-});
-
-//api which deletes comment
-app.delete("/api/posts/:postId/comments/:commentId", (req, res) => {
-  const { postId, commentId } = req.params;
-  db.ref("posts")
-    .child(postId)
-    .once("value")
-    .then((snapshot) => {
-      const post = snapshot.val();
-      const filteredComments = post.comments.filter((comment) => {
-        return comment.id != commentId;
-      });
-      if (post) {
-        db.ref("posts")
-          .child(postId)
-          .update({ comments: filteredComments.length ? filteredComments : "" })
-          .then(() => {
-            res.json(filteredComments);
-          })
-          .catch((error) => {
-            res.status(500).json({ error: "Error adding comment" });
-          });
-      } else {
-        res.status(404).json({ error: "Post not found" });
-      }
     });
 });
 
