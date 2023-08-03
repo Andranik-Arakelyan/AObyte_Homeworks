@@ -29,7 +29,8 @@ export const addPostWithImage = async ({ title, description, image }) => {
 
 export const addComment = async (postId, commentData) => {
   try {
-    return await api.post(`/posts/${postId}/comments`, commentData);
+    const response = await api.post(`/posts/${postId}/comments`, commentData);
+    return response.data;
   } catch (error) {
     throw new Error("Error adding comment");
   }

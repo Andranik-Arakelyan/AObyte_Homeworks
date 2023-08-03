@@ -4,17 +4,19 @@ import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { addComment } from "../../api/api";
-
 import send from "../../assets/send.png";
 
 import classes from "./AddComment.module.css";
 import InButton from "../../UI/InButton";
+import { addCom } from "../../features/postsSlice";
+import { useDispatch } from "react-redux";
 
-function AddComment({ id, refreshComs }) {
+function AddComment({ id }) {
   const [comment, setComment] = useState("");
   const [ratingValue, setRatingValue] = useState(5);
   const [sending, setSending] = useState(false);
+
+  const dispatch = useDispatch();
 
   const resetState = () => {
     setComment("");
@@ -35,12 +37,9 @@ function AddComment({ id, refreshComs }) {
         rating: ratingValue,
       };
 
-      addComment(id, newComment)
-        .then((response) => {
-          resetState();
-          refreshComs(response.data);
-        })
-        .catch((err) => console.log(err.message));
+      dispatch(addCom(id, newComment));
+      resetState();
+      setSending(false);
     }
   };
 

@@ -1,128 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Board } from "../../components";
 
-import { fetchPosts } from "../../api/api";
-import { calculateAverages, sort } from "../../helpers";
-
-import {
-  LEFT_POSTS,
-  RIGHT_POSTS,
-  ASCENDING,
-  DESCENDING,
-} from "../../constants";
+import { LEFT_POSTS, RIGHT_POSTS, ASCENDING } from "../../constants";
 
 import classes from "./Panel.module.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { disablePost } from "../../features/postsSlice";
+import {
+  addPost,
+  changeSortDirection,
+  clearDesk,
+  getPanel,
+  removePost,
+} from "../../features/panelSlice";
 
 function Panel(props) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const [allPosts, setAllPosts] = useState([]);
-  const [leftandRightPosts, setLeftAndRightPosts] = useState({
-    leftPosts: [],
-    rightPosts: [],
-  });
-
   const dispatch = useDispatch();
-  useEffect(() => {
-    fetchPosts()
-      .then((response) => {
-        const withAveragePosts = calculateAverages(response.data).filter(
-          (post) => post.average
-        );
-        setAllPosts(sort(withAveragePosts, DESCENDING, "average"));
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setError(error);
-      });
-  }, []);
+  const panel = useSelector(getPanel);
+  const { allPosts, leftPosts, rightPosts } = panel;
 
-  const addPost = (column, dir) => {
-    if (allPosts.length) {
-      let pickedPost;
-      if (dir === ASCENDING) {
-        pickedPost = allPosts[allPosts.length - 1];
-        setAllPosts((prevAllPosts) => prevAllPosts.slice(0, -1));
-      } else {
-        pickedPost = allPosts[0];
-        setAllPosts((prevAllPosts) => prevAllPosts.slice(1));
-      }
-
-      setLeftAndRightPosts({
-        ...leftandRightPosts,
-        [column]: sort(
-          [...leftandRightPosts[column], pickedPost],
-          dir,
-          "average"
-        ),
-      });
-      dispatch(disablePost([{ id: pickedPost.id, status: true }]));
-    }
+  const addPostHandler = (column, dir) => {
+    const id =
+      dir === ASCENDING ? allPosts[allPosts.length - 1].id : allPosts[0].id;
+    dispatch(addPost(column, dir));
+    dispatch(disablePost([{ id, status: true }]));
   };
 
-  const removePost = (column, id) => {
-    setLeftAndRightPosts({
-      ...leftandRightPosts,
-      [column]: leftandRightPosts[column].filter((item) => item.id !== id),
-    });
-
-    setAllPosts(
-      sort(
-        [...allPosts, leftandRightPosts[column].find((item) => item.id === id)],
-        DESCENDING,
-        "average"
-      )
-    );
-    dispatch(disablePost([{ id: id, status: false }]));
+  const removePostHandler = (column, id) => {
+    dispatch(removePost(column, id));
+    dispatch(disablePost([{ id, status: false }]));
   };
 
-  const changeSortDirection = (column, dir) => {
-    setLeftAndRightPosts({
-      ...leftandRightPosts,
-      [column]: sort(leftandRightPosts[column], dir, "average"),
-    });
+  const changeSortDirectionHandler = (column, dir) => {
+    dispatch(changeSortDirection(column, dir));
   };
 
-  const clearDesk = (column) => {
-    setLeftAndRightPosts({ ...leftandRightPosts, [column]: [] });
-
-    setAllPosts((prevAllPosts) => {
-      return sort(
-        [...prevAllPosts, ...leftandRightPosts[column]],
-        DESCENDING,
-        "average"
-      );
-    });
-
-    const disablings = leftandRightPosts[column].map((post) => {
-      return { id: post.id, status: false };
-    });
-    dispatch(disablePost(disablings));
+  const clearDeskHandler = (column) => {
+    dispatch(clearDesk(column));
+    dispatch(disablePost(panel[column]));
   };
 
-  return !loading && error ? (
-    <p>Failed to fetch posts</p>
-  ) : (
+  return (
     <div className={classes.container}>
       <Board
-        addPost={(dir) => addPost(LEFT_POSTS, dir)}
-        posts={leftandRightPosts.leftPosts}
-        removeHandler={(id) => removePost(LEFT_POSTS, id)}
-        sortDir={(dir) => changeSortDirection(LEFT_POSTS, dir)}
-        clearDesk={() => clearDesk(LEFT_POSTS)}
+        addPost={(dir) => addPostHandler(LEFT_POSTS, dir)}
+        posts={leftPosts}
+        removeHandler={(id) => removePostHandler(LEFT_POSTS, id)}
+        sortDir={(dir) => changeSortDirectionHandler(LEFT_POSTS, dir)}
+        clearDesk={() => clearDeskHandler(LEFT_POSTS)}
         allPosts={allPosts}
       />
       <Board
-        addPost={(dir) => addPost(RIGHT_POSTS, dir)}
-        posts={leftandRightPosts.rightPosts}
-        removeHandler={(id) => removePost(RIGHT_POSTS, id)}
-        sortDir={(dir) => changeSortDirection(RIGHT_POSTS, dir)}
-        clearDesk={() => clearDesk(RIGHT_POSTS)}
+        addPost={(dir) => addPostHandler(RIGHT_POSTS, dir)}
+        posts={rightPosts}
+        removeHandler={(id) => removePostHandler(RIGHT_POSTS, id)}
+        sortDir={(dir) => changeSortDirectionHandler(RIGHT_POSTS, dir)}
+        clearDesk={() => clearDeskHandler(RIGHT_POSTS)}
         allPosts={allPosts}
       />
     </div>

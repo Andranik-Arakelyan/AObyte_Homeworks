@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { Post } from "../../components";
 import Pagination from "@mui/material/Pagination";
@@ -15,15 +15,17 @@ function Posts(props) {
 
   const searchValue = useSelector(getSearchValue);
 
-  const { posts, loading, error } = useSelector(getPosts);
+  const { posts } = useSelector(getPosts);
 
-  const filteredPosts = posts.filter((post) => {
-    return post.title.toLowerCase().includes(searchValue.toLowerCase());
-  });
+  const filteredPosts = useMemo(() => {
+    return posts.filter((post) => {
+      return post.title.toLowerCase().includes(searchValue.toLowerCase());
+    });
+  }, [searchValue, posts]);
 
   const drawPosts = (posts) => {
     return posts.map((post) => {
-      return !loading && <Post key={post.id} post={post} />;
+      return <Post key={post.id} post={post} />;
     });
   };
 
@@ -50,9 +52,7 @@ function Posts(props) {
     currentPage * postEachPage
   );
 
-  return !loading && error ? (
-    <p>Something went wrong</p>
-  ) : (
+  return (
     <section className={classes.container}>
       <ul className={classes.posts}>
         {searchValue.trim() ? drawPosts(filteredPosts) : drawPosts(showedPosts)}

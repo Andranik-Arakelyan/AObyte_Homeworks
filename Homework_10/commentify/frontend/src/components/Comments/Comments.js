@@ -4,29 +4,32 @@ import { AddComment, Comment } from "../../components";
 import DeleteDialog from "../Post/DeleteDialog";
 import InButton from "../../UI/InButton";
 
-import { deleteComment } from "../../api/api";
-
 import { sort } from "../../helpers";
 import { ASCENDING, DESCENDING } from "../../constants";
 import upSort from "../../assets/upsort.png";
 import downSort from "../../assets/downsort.png";
 import classes from "./Comments.module.css";
 import { PostDataContext } from "../../context";
+import { useDispatch } from "react-redux";
+import { deleteCom, updateComments } from "../../features/postsSlice";
 
 function Comments({ comsData }) {
   const postData = useContext(PostDataContext);
   const [sortDir, setSortDir] = useState(DESCENDING);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
-  const [comments, setComments] = useState(
-    sort(comsData, DESCENDING, "rating")
-  );
+  const comments = sort(comsData, DESCENDING, "rating");
+
+  const dispatch = useDispatch();
 
   const changeSortDirection = () => {
     setSortDir(sortDir === DESCENDING ? ASCENDING : DESCENDING);
-    setComments(
-      sort(comments, sortDir === DESCENDING ? ASCENDING : DESCENDING, "rating")
+    const newSortedComments = sort(
+      comments,
+      sortDir === DESCENDING ? ASCENDING : DESCENDING,
+      "rating"
     );
+    dispatch(updateComments(postData.id, newSortedComments));
   };
 
   const drawSortDirection = () => {
@@ -51,13 +54,8 @@ function Comments({ comsData }) {
     setDeleteDialog((prevDialog) => !prevDialog);
   };
 
-  const deleteCom = async (postId, commentId) => {
-    const updatedComments = await deleteComment(postId, commentId);
-    setComments(updatedComments.data);
-  };
-
-  const refreshComments = (updatedComment) => {
-    setComments(sort([...comments, updatedComment], "rating"));
+  const deleteCommentHandler = (postId, commentId) => {
+    dispatch(deleteCom(postId, commentId));
   };
 
   const drawComments = (comments) => {
@@ -75,7 +73,7 @@ function Comments({ comsData }) {
               handleClose={handleDeleteDialogState}
               deleteComment={() => {
                 handleDeleteDialogState();
-                deleteCom(postData.id, com.id);
+                deleteCommentHandler(postData.id, com.id);
               }}
             />
           </li>
@@ -87,7 +85,7 @@ function Comments({ comsData }) {
     <div className={classes.container}>
       {drawSortDirection()}
       <ul>{drawComments(comments)}</ul>
-      <AddComment id={postData.id} refreshComs={refreshComments} />
+      <AddComment id={postData.id} />
     </div>
   );
 }

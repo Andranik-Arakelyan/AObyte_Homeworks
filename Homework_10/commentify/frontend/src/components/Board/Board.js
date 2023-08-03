@@ -9,16 +9,20 @@ import classes from "./Board.module.css";
 import Card from "../../UI/Card";
 import { useNavigate } from "react-router-dom";
 
-function Board(props) {
+function Board({
+  addPost,
+  posts,
+  removeHandler,
+  sortDir,
+  clearDesk,
+  allPosts,
+}) {
   const [sortDirection, setSortDir] = useState(DESCENDING);
-
   const navigate = useNavigate();
 
   const openPostDetails = (id) => {
     navigate(`posts/${id}`);
   };
-
-  const { addPost, posts, removeHandler, sortDir, clearDesk, allPosts } = props;
 
   const drawPosts = () => {
     return posts.map((post) => {

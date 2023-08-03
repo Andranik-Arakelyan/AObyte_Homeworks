@@ -17,7 +17,7 @@ export const getRandomAvatar = () => {
 
 export function calculateAverages(arr) {
   arr.forEach((element) => {
-    if (element.comments) {
+    if (element.comments.length) {
       element.average = +(
         element.comments.reduce((acc, comment) => {
           return acc + comment.rating;
